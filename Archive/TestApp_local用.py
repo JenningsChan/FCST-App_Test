@@ -6,7 +6,7 @@
 import streamlit as st
 from PIL import Image
 import sys
-sys.path.append("./Tools")
+sys.path.append("./Tool")
 #from Trend_Analysis2 import HiddenPrints, Data, cal_Tool, visual, Model
 from Trend_Analysis2 import Data, cal_Tool
 import pandas as pd
@@ -19,7 +19,7 @@ from pyxlsb import open_workbook as open_xlsb
 import plotly.express as px 
 from dateutil.relativedelta import relativedelta
 from xlsxwriter import Workbook
-from openpyxl import load_workbook
+
 #%matplotlib inline
 
 def to_excel(df):
@@ -40,18 +40,13 @@ def color_survived(val):
 
 @st.cache(allow_output_mutation=True)
 def load_data(path):
-    wb = load_workbook(filename=target_path,read_only=False ,data_only=True, keep_vba=True)
-    ws = wb.active
-    ws = wb['Sheet1']
-    df = pd.DataFrame(ws.values).iloc[:,1:]
-    df.columns = df.loc[0]
-    df = df.iloc[1:,:]
+    df = pd.read_excel(path, index_col=0)
     return df
 ##############################################STREAMLIT####################################################
 
 ###################Page Title##################
 
-image = Image.open('./peloton-logo.png')
+image = Image.open('/Users/jennings.chan/Desktop/peloton-logo.png')
 
 st.image(image, use_column_width=True)
 st.markdown('***Designed by Jennings Chan *** \f\f\f 📩\f *** jennings.chan@onepeloton.com***')
@@ -106,12 +101,14 @@ if st.sidebar.button('Confirm'):
     st.line_chart(stock_engine.stock_data.Open)
 
     if predicted_interval == 1:
-        compare = load_data('./{}/1 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
+        compare = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
+        #compare = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/comparison_{}{}.xlsx'.format(stock_number,yyyy,mm),index_col=0)
         if compare.iloc[0,0]== 'LightGBM' and compare.loc[compare.model=='LightGBM','acc_for_gbm'].values[0] <= 0.6:
             st.write('***')
             st.write("""最佳預測模型：{}""".format(compare.iloc[1,0]))
             if compare.iloc[1,0] == 'lstm':    
-                lstm_df = load_data('./{}/1 MONTH/{}{}/{}_Best_by_lstm.xlsx'.format(stock_number,yyyy,mm,product)) 
+                lstm_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_Best_by_lstm.xlsx'.format(stock_number,yyyy,mm,product)) 
+                #lstm_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_lstm_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
                     如果遇到國定假日，該平日請直接忽略預測值''')
@@ -124,7 +121,8 @@ if st.sidebar.button('Confirm'):
                 st.write('平均預測震動程度為:{} (真實與預測值平均變動率差異)'.format(round(compare.loc[compare.model=='lstm','score'].values[0],2)))
                 st.write('**訓練集訓練概況**')
                 #st.pyplot(lstm_train_plot)
-                lstm_train_plot = load_data('./{}/1 MONTH/{}{}/{}_for_lstm_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                lstm_train_plot = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_lstm_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                #lstm_train_plot = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_lstm_train_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig1 = px.line(lstm_train_plot,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
                                 "Real Stock Price": "#008080"
@@ -132,7 +130,8 @@ if st.sidebar.button('Confirm'):
                 st.write(fig1)
                 st.write('**測試集預測概況**')
                 #st.pyplot(lstm_test_plot)
-                lstm_test_plot = load_data('./{}/1 MONTH/{}{}/{}_for_lstm_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                lstm_test_plot = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_lstm_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                #lstm_test_plot = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_lstm_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig2 = px.line(lstm_test_plot,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
                                 "Real Stock Price": "#008080"
@@ -140,7 +139,7 @@ if st.sidebar.button('Confirm'):
                 st.write(fig2)
                 st.write('**真實預測一個月概況**')
                 #st.pyplot(lstm_real_plot)
-                lstm_real_plot = load_data('./{}/1 MONTH/{}{}/{}_for_lstm_real_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                lstm_real_plot = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_lstm_real_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #lstm_real_plot = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_lstm_real_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig3 = px.line(lstm_real_plot,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -148,7 +147,7 @@ if st.sidebar.button('Confirm'):
                             })
                 st.write(fig3)
             elif compare.iloc[1,0] == 'WMA':
-                wma_df = load_data('./{}/1 MONTH/{}{}/{}_Best_by_wma.xlsx'.format(stock_number,yyyy,mm,product))
+                wma_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_Best_by_wma.xlsx'.format(stock_number,yyyy,mm,product))
                 #wma_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_wma_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
@@ -162,7 +161,7 @@ if st.sidebar.button('Confirm'):
                 st.header('**模型訓練狀況**')
                 st.write('平均預測震動程度為:{} (真實與預測值平均變動率差異)'.format(round(compare.loc[compare.model=='WMA','score'].values[0],2)))
                 st.write('**訓練集訓練概況**')
-                ma_train = load_data('./{}/1 MONTH/{}{}/{}_for_wma_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                ma_train = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_wma_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #ma_train = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_wma_train_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig1 = px.line(ma_train,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -172,7 +171,7 @@ if st.sidebar.button('Confirm'):
                 #st.pyplot(ma_train)
                 st.write('**測試集預測概況**')
                 #st.pyplot(ma_test)
-                ma_test = load_data('./{}/1 MONTH/{}{}/{}_for_wma_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                ma_test = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_wma_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #ma_test = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_wma_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig2 = px.line(ma_test,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -180,7 +179,7 @@ if st.sidebar.button('Confirm'):
                             })
                 st.write(fig2)
             elif compare.iloc[1,0] == 'ARIMA':
-                arima_df = load_data('./{}/1 MONTH/{}{}/{}_Best_by_arima.xlsx'.format(stock_number,yyyy,mm,product))
+                arima_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_Best_by_arima.xlsx'.format(stock_number,yyyy,mm,product))
                 #arima_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_arima_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
@@ -197,7 +196,7 @@ if st.sidebar.button('Confirm'):
                 #st.pyplot(arima_trend)
                 st.write('**測試集預測概況**')
                 #st.pyplot(arima_test)
-                arima_test = load_data('./{}/1 MONTH/{}{}/{}_for_arima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                arima_test = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_arima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #arima_test = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_arima_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig1 = px.line(arima_test,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -214,7 +213,7 @@ if st.sidebar.button('Confirm'):
                 #st.write('**ACF圖表**') 
                 #st.pyplot(acf)
             elif compare.iloc[1,0] == 'SARIMA':
-                sarima_df = load_data('./{}/1 MONTH/{}{}/{}_Best_by_sarima.xlsx'.format(stock_number,yyyy,mm,product))
+                sarima_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_Best_by_sarima.xlsx'.format(stock_number,yyyy,mm,product))
                 #sarima_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_sarima_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
@@ -229,7 +228,7 @@ if st.sidebar.button('Confirm'):
                 st.write('平均預測震動程度為:{} (真實與預測值平均變動率差異)'.format(round(compare.loc[compare.model=='SARIMA','score'].values[0],2)))
                 st.write('**測試集預測概況**')
                 #st.pyplot(sarima_test)
-                sarima_test = load_data('./{}/1 MONTH/{}{}/{}_for_sarima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                sarima_test = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_sarima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #sarima_test = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_sarima_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig = px.line(sarima_test,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -240,7 +239,7 @@ if st.sidebar.button('Confirm'):
             st.write('***')
             st.write('最佳預測模型：{}'.format(compare.iloc[0,0]))
             if compare.iloc[0,0] == 'lstm':
-                lstm_df = load_data('./{}/1 MONTH/{}{}/{}_Best_by_lstm.xlsx'.format(stock_number,yyyy,mm,product)) 
+                lstm_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_Best_by_lstm.xlsx'.format(stock_number,yyyy,mm,product)) 
                 #lstm_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_lstm_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
@@ -254,7 +253,7 @@ if st.sidebar.button('Confirm'):
                 st.write('平均預測震動程度為:{} (真實與預測值平均變動率差異)'.format(round(compare.loc[compare.model=='lstm','score'].values[0],2)))
                 st.write('**訓練集訓練概況**')
                 #st.pyplot(lstm_train_plot)
-                lstm_train_plot = load_data('./{}/1 MONTH/{}{}/{}_for_lstm_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                lstm_train_plot = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_lstm_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #lstm_train_plot = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_lstm_train_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig1 = px.line(lstm_train_plot,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -263,7 +262,7 @@ if st.sidebar.button('Confirm'):
                 st.write(fig1)
                 st.write('**測試集預測概況**')
                 #st.pyplot(lstm_test_plot)
-                lstm_test_plot = load_data('./{}/1 MONTH/{}{}/{}_for_lstm_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                lstm_test_plot = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_lstm_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #lstm_test_plot = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_lstm_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig2 = px.line(lstm_test_plot,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -272,7 +271,7 @@ if st.sidebar.button('Confirm'):
                 st.write(fig2)
                 st.write('**真實預測一個月概況**')
                 #st.pyplot(lstm_real_plot)
-                lstm_real_plot = load_data('./{}/1 MONTH/{}{}/{}_for_lstm_real_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                lstm_real_plot = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_lstm_real_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #lstm_real_plot = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_lstm_real_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig3 = px.line(lstm_real_plot,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -280,7 +279,7 @@ if st.sidebar.button('Confirm'):
                             })
                 st.write(fig3)
             elif compare.iloc[0,0] == 'WMA':
-                wma_df = load_data('./{}/1 MONTH/{}{}/{}_Best_by_wma.xlsx'.format(stock_number,yyyy,mm,product))
+                wma_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_Best_by_wma.xlsx'.format(stock_number,yyyy,mm,product))
                 #wma_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_wma_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
@@ -294,7 +293,7 @@ if st.sidebar.button('Confirm'):
                 st.header('**模型訓練狀況**')
                 st.write('平均預測震動程度為:{} (真實與預測值平均變動率差異)'.format(round(compare.loc[compare.model=='WMA','score'].values[0],2)))
                 st.write('**訓練集訓練概況**')
-                ma_train = load_data('./{}/1 MONTH/{}{}/{}_for_wma_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                ma_train = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_wma_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #ma_train = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_wma_train_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig1 = px.line(ma_train,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -304,7 +303,7 @@ if st.sidebar.button('Confirm'):
                 #st.pyplot(ma_train)
                 st.write('**測試集預測概況**')
                 #st.pyplot(ma_test)
-                ma_test = load_data('./{}/1 MONTH/{}{}/{}_for_wma_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                ma_test = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_wma_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #ma_test = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_wma_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig2 = px.line(ma_test,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -312,7 +311,7 @@ if st.sidebar.button('Confirm'):
                             })
                 st.write(fig2)
             elif compare.iloc[0,0] == 'ARIMA':
-                arima_df = load_data('./{}/1 MONTH/{}{}/{}_Best_by_arima.xlsx'.format(stock_number,yyyy,mm,product))
+                arima_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_Best_by_arima.xlsx'.format(stock_number,yyyy,mm,product))
                 #arima_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_arima_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
@@ -329,7 +328,7 @@ if st.sidebar.button('Confirm'):
                 #st.pyplot(arima_trend)
                 st.write('**測試集預測概況**')
                 #st.pyplot(arima_test)
-                arima_test = load_data('./{}/1 MONTH/{}{}/{}_for_arima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                arima_test = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_arima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #arima_test = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_arima_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig1 = px.line(arima_test,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -346,7 +345,7 @@ if st.sidebar.button('Confirm'):
                 #st.write('**ACF圖表**') 
                 #st.pyplot(acf)
             elif compare.iloc[0,0] == 'SARIMA':
-                sarima_df = load_data('./{}/1 MONTH/{}{}/{}_Best_by_sarima.xlsx'.format(stock_number,yyyy,mm,product))
+                sarima_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_Best_by_sarima.xlsx'.format(stock_number,yyyy,mm,product))
                 #sarima_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_sarima_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
@@ -361,7 +360,7 @@ if st.sidebar.button('Confirm'):
                 st.write('平均預測震動程度為:{} (真實與預測值平均變動率差異)'.format(round(compare.loc[compare.model=='SARIMA','score'].values[0],2)))
                 st.write('**測試集預測概況**')
                 #st.pyplot(sarima_test)
-                sarima_test = load_data('./{}/1 MONTH/{}{}/{}_for_sarima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                sarima_test = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_sarima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #sarima_test = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_sarima_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig = px.line(sarima_test,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -369,7 +368,7 @@ if st.sidebar.button('Confirm'):
                             })
                 st.write(fig)
             elif compare.iloc[0,0] == 'LightGBM':
-                gbm_df = load_data('./{}/1 MONTH/{}{}/{}_Best_by_light.xlsx'.format(stock_number,yyyy,mm,product))
+                gbm_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_Best_by_light.xlsx'.format(stock_number,yyyy,mm,product))
                 #gbm_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_light_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
@@ -385,7 +384,7 @@ if st.sidebar.button('Confirm'):
                 st.write('漲跌預測準確度為:{}'.format(round(score_gbm_acc,2)))
                 st.write('**測試集預測概況**')
                 #st.pyplot(gbm_test_plot)
-                gbm_test_plot = load_data('./{}/1 MONTH/{}{}/{}_for_gbm_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                gbm_test_plot = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_gbm_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #gbm_test_plot = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_gbm_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig1 = px.line(gbm_test_plot,color_discrete_map={
                                 "Predicted Stock Price": "#0000cd",
@@ -394,7 +393,7 @@ if st.sidebar.button('Confirm'):
                 st.write(fig1)
                 st.write('**漲跌幅狀況**')
                 #st.pyplot(gbm_change_plot)
-                gbm_change_plot = load_data('./{}/1 MONTH/{}{}/{}_for_gbm_change_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                gbm_change_plot = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_gbm_change_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #gbm_change_plot = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_gbm_change_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig2 = px.line(gbm_change_plot,color_discrete_map={
                                 "Predicted Stock Price Changing": "#0000cd",
@@ -428,7 +427,7 @@ if st.sidebar.button('Confirm'):
                 explain.set_index('指數名稱',inplace = True)
                 st.dataframe(explain)
                 #st.pyplot(gbm_importance_plot.figure)
-                gbm_importance_plot = load_data('./{}/1 MONTH/{}{}/{}_for_gbm_importance_plot.xlsx'.format(stock_number,yyyy,mm,product))
+                gbm_importance_plot = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_for_gbm_importance_plot.xlsx'.format(stock_number,yyyy,mm,product))
                 #gbm_importance_plot = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_gbm_importance_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 gbm_importance_plot.sort_values('importance',ascending=False,inplace=True)
                 gbm_importance_plot = gbm_importance_plot[:15].sort_values('importance')
@@ -436,12 +435,12 @@ if st.sidebar.button('Confirm'):
                 st.write(fig)
 
     elif predicted_interval == 3:
-        compare = load_data('./{}/3 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
+        compare = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
         #compare = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/comparison_{}{}.xlsx'.format(stock_number,yyyy,mm),index_col=0)
         st.write('***')
         st.write("""最佳預測模型：{}""".format(compare.iloc[0,0]))
         if compare.iloc[0,0] == 'WMA':
-            wma_df = load_data('./{}/3 MONTH/{}{}/{}_Best_by_wma.xlsx'.format(stock_number,yyyy,mm,product))
+            wma_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_Best_by_wma.xlsx'.format(stock_number,yyyy,mm,product))
             #wma_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_wma_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             st.header('{}月份預測數值名單'.format(mm))
             st.write('''🔔\f
@@ -455,7 +454,7 @@ if st.sidebar.button('Confirm'):
             st.header('**模型訓練狀況**')
             st.write('平均預測震動程度為:{} (真實與預測值平均變動率差異)'.format(round(compare.loc[compare.model=='WMA','score'].values[0],2)))
             st.write('**訓練集訓練概況**')
-            ma_train = load_data('./{}/3 MONTH/{}{}/{}_for_wma_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
+            ma_train = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_for_wma_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
             #ma_train = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_wma_train_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             fig1 = px.line(ma_train,color_discrete_map={
                             "Predicted Stock Price": "#0000cd",
@@ -465,7 +464,7 @@ if st.sidebar.button('Confirm'):
             #st.pyplot(ma_train)
             st.write('**測試集預測概況**')
             #st.pyplot(ma_test)
-            ma_test = load_data('./{}/3 MONTH/{}{}/{}_for_wma_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+            ma_test = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_for_wma_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
             #ma_test = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_wma_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             fig2 = px.line(ma_test,color_discrete_map={
                             "Predicted Stock Price": "#0000cd",
@@ -473,7 +472,7 @@ if st.sidebar.button('Confirm'):
                         })
             st.write(fig2)
         elif compare.iloc[0,0] == 'ARIMA':
-            arima_df = load_data('./{}/3 MONTH/{}{}/{}_Best_by_arima.xlsx'.format(stock_number,yyyy,mm,product))
+            arima_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_Best_by_arima.xlsx'.format(stock_number,yyyy,mm,product))
             #arima_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_arima_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             st.header('{}月份預測數值名單'.format(mm))
             st.write('''🔔\f
@@ -490,7 +489,7 @@ if st.sidebar.button('Confirm'):
             #st.pyplot(arima_trend)
             st.write('**測試集預測概況**')
             #st.pyplot(arima_test)
-            arima_test = load_data('./{}/3 MONTH/{}{}/{}_for_arima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+            arima_test = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_for_arima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
             #arima_test = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_arima_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             fig1 = px.line(arima_test,color_discrete_map={
                             "Predicted Stock Price": "#0000cd",
@@ -507,7 +506,7 @@ if st.sidebar.button('Confirm'):
             #st.write('**ACF圖表**') 
             #st.pyplot(acf)
         elif compare.iloc[0,0] == 'SARIMA':
-            sarima_df = load_data('./{}/3 MONTH/{}{}/{}_Best_by_sarima.xlsx'.format(stock_number,yyyy,mm,product))
+            sarima_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_Best_by_sarima.xlsx'.format(stock_number,yyyy,mm,product))
             #sarima_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_sarima_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             st.header('{}月份預測數值名單'.format(mm))
             st.write('''🔔\f
@@ -522,7 +521,7 @@ if st.sidebar.button('Confirm'):
             st.write('平均預測震動程度為:{} (真實與預測值平均變動率差異)'.format(round(compare.loc[compare.model=='SARIMA','score'].values[0],2)))
             st.write('**測試集預測概況**')
             #st.pyplot(sarima_test)
-            sarima_test = load_data('./{}/3 MONTH/{}{}/{}_for_sarima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+            sarima_test = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_for_sarima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
             #sarima_test = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_sarima_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             fig = px.line(sarima_test,color_discrete_map={
                             "Predicted Stock Price": "#0000cd",
@@ -531,12 +530,12 @@ if st.sidebar.button('Confirm'):
             st.write(fig)
 
     elif predicted_interval == 6:
-        compare = load_data('./{}/6 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
+        compare = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
         #compare = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/comparison_{}{}.xlsx'.format(stock_number,yyyy,mm),index_col=0)
         st.write('***')
         st.write("""最佳預測模型：{}""".format(compare.iloc[0,0]))
         if compare.iloc[0,0] == 'WMA':
-            wma_df = load_data('./{}/6 MONTH/{}{}/{}_Best_by_wma.xlsx'.format(stock_number,yyyy,mm,product))
+            wma_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_Best_by_wma.xlsx'.format(stock_number,yyyy,mm,product))
             #wma_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_wma_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             st.header('{}月份預測數值名單'.format(mm))
             st.write('''🔔\f
@@ -550,7 +549,7 @@ if st.sidebar.button('Confirm'):
             st.header('**模型訓練狀況**')
             st.write('平均預測震動程度為:{} (真實與預測值平均變動率差異)'.format(round(compare.loc[compare.model=='WMA','score'].values[0],2)))
             st.write('**訓練集訓練概況**')
-            ma_train = load_data('./{}/6 MONTH/{}{}/{}_for_wma_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
+            ma_train = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_for_wma_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
             #ma_train = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_wma_train_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             fig1 = px.line(ma_train,color_discrete_map={
                             "Predicted Stock Price": "#0000cd",
@@ -560,7 +559,7 @@ if st.sidebar.button('Confirm'):
             #st.pyplot(ma_train)
             st.write('**測試集預測概況**')
             #st.pyplot(ma_test)
-            ma_test = load_data('./{}/6 MONTH/{}{}/{}_for_wma_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+            ma_test = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_for_wma_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
             #ma_test = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_wma_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             fig2 = px.line(ma_test,color_discrete_map={
                             "Predicted Stock Price": "#0000cd",
@@ -568,7 +567,7 @@ if st.sidebar.button('Confirm'):
                         })
             st.write(fig2)
         elif compare.iloc[0,0] == 'ARIMA':
-            arima_df = load_data('./{}/6 MONTH/{}{}/{}_Best_by_arima.xlsx'.format(stock_number,yyyy,mm,product))
+            arima_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_Best_by_arima.xlsx'.format(stock_number,yyyy,mm,product))
             #arima_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_arima_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             st.header('{}月份預測數值名單'.format(mm))
             st.write('''🔔\f
@@ -585,7 +584,7 @@ if st.sidebar.button('Confirm'):
             #st.pyplot(arima_trend)
             st.write('**測試集預測概況**')
             #st.pyplot(arima_test)
-            arima_test = load_data('./{}/6 MONTH/{}{}/{}_for_arima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+            arima_test = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_for_arima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
             #arima_test = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_arima_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             fig1 = px.line(arima_test,color_discrete_map={
                             "Predicted Stock Price": "#0000cd",
@@ -602,7 +601,7 @@ if st.sidebar.button('Confirm'):
             #st.write('**ACF圖表**') 
             #st.pyplot(acf)
         elif compare.iloc[0,0] == 'SARIMA':
-            sarima_df = load_data('./{}/6 MONTH/{}_Best_by_sarima_{}{}.xlsx'.format(stock_number,product,yyyy,mm))
+            sarima_df = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}_Best_by_sarima_{}{}.xlsx'.format(stock_number,product,yyyy,mm))
             #sarima_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_sarima_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             st.header('{}月份預測數值名單'.format(mm))
             st.write('''🔔\f
@@ -617,7 +616,7 @@ if st.sidebar.button('Confirm'):
             st.write('平均預測震動程度為:{} (真實與預測值平均變動率差異)'.format(round(compare.loc[compare.model=='SARIMA','score'].values[0],2)))
             st.write('**測試集預測概況**')
             #st.pyplot(sarima_test)
-            sarima_test = load_data('./{}/6 MONTH/{}{}/{}_for_sarima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
+            sarima_test = load_data('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_for_sarima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
             #sarima_test = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_sarima_test_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             fig = px.line(sarima_test,color_discrete_map={
                             "Predicted Stock Price": "#0000cd",
