@@ -24,6 +24,6 @@ If you have any demands or questions, do not hesitate to reach out to me. Thanks
 Sincerely 
 Peloton Interactive
 
-Jennings Chan
-Supply Chain Planner, TWSCM
+Jennings Chan \n
+Supply Chain Planner, TWSCM \n
 jennings.chan@onepeloton.com
