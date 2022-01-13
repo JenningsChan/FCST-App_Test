@@ -40,7 +40,7 @@ def color_survived(val):
 
 @st.cache(allow_output_mutation=True)
 def load_data(path):
-    wb = load_workbook(filename=target_path,read_only=False ,data_only=True, keep_vba=True)
+    wb = load_workbook(filename=path,read_only=False ,data_only=True, keep_vba=True)
     ws = wb.active
     ws = wb['Sheet1']
     df = pd.DataFrame(ws.values).iloc[:,1:]
