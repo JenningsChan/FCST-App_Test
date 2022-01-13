@@ -19,7 +19,7 @@ from pyxlsb import open_workbook as open_xlsb
 import plotly.express as px 
 from dateutil.relativedelta import relativedelta
 from xlsxwriter import Workbook
-
+from openpyxl import load_workbook
 #%matplotlib inline
 
 def to_excel(df):
@@ -40,7 +40,15 @@ def color_survived(val):
 
 @st.cache(allow_output_mutation=True)
 def load_data(path):
-    df = pd.read_excel(path, index_col=0)
+    wb = load_workbook(filename=path,read_only=False ,data_only=True, keep_vba=True)
+    ws = wb.active
+    ws = wb['Sheet1']
+    df = pd.DataFrame(ws.values)#.iloc[:,1:]
+    df.set_index([0],inplace=True)
+    df.columns = df.iloc[0]
+    df = df.iloc[1:,:]
+    df.index.name = None
+    df.rename_axis(None, axis=1, inplace=True)
     return df
 ##############################################STREAMLIT####################################################
 
@@ -112,6 +120,7 @@ if st.sidebar.button('Confirm'):
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
                     如果遇到國定假日，該平日請直接忽略預測值''')
+                lstm_df['漲跌'] = lstm_df['漲跌'].astype(float)
                 st.dataframe(lstm_df.style.applymap(color_survived, subset=['漲跌']))
                 df_xlsx = to_excel(lstm_df)
                 st.write('📥')
@@ -152,6 +161,7 @@ if st.sidebar.button('Confirm'):
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
                     如果遇到國定假日，該平日請直接忽略預測值''')
+                wma_df['漲跌'] = wma_df['漲跌'].astype(float)
                 st.dataframe(wma_df.style.applymap(color_survived, subset=['漲跌']))
                 #st.dataframe(wma_df)
                 df_xlsx = to_excel(wma_df)
@@ -184,7 +194,7 @@ if st.sidebar.button('Confirm'):
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
                     如果遇到國定假日，該平日請直接忽略預測值''')
-                #st.dataframe(arima_df)
+                arima_df['漲跌'] = arima_df['漲跌'].astype(float)
                 st.dataframe(arima_df.style.applymap(color_survived, subset=['漲跌']))
                 df_xlsx = to_excel(arima_df)
                 st.write('📥')
@@ -219,6 +229,7 @@ if st.sidebar.button('Confirm'):
                 st.write('''🔔\f
                     如果遇到國定假日，該平日請直接忽略預測值''')
                 #st.dataframe(sarima_df)
+                sarima_df['漲跌'] = sarima_df['漲跌'].astype(float)
                 st.dataframe(sarima_df.style.applymap(color_survived, subset=['漲跌']))
                 df_xlsx = to_excel(sarima_df)
                 st.write('📥')
@@ -244,6 +255,7 @@ if st.sidebar.button('Confirm'):
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
                     如果遇到國定假日，該平日請直接忽略預測值''')
+                lstm_df['漲跌'] = lstm_df['漲跌'].astype(float)
                 st.dataframe(lstm_df.style.applymap(color_survived, subset=['漲跌']))
                 df_xlsx = to_excel(lstm_df)
                 st.write('📥')
@@ -284,6 +296,7 @@ if st.sidebar.button('Confirm'):
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
                     如果遇到國定假日，該平日請直接忽略預測值''')
+                wma_df['漲跌'] = wma_df['漲跌'].astype(float)
                 st.dataframe(wma_df.style.applymap(color_survived, subset=['漲跌']))
                 #st.dataframe(wma_df)
                 df_xlsx = to_excel(wma_df)
@@ -316,7 +329,7 @@ if st.sidebar.button('Confirm'):
                 st.header('{}月份預測數值名單'.format(mm))
                 st.write('''🔔\f
                     如果遇到國定假日，該平日請直接忽略預測值''')
-                #st.dataframe(arima_df)
+                arima_df['漲跌'] = arima_df['漲跌'].astype(float)
                 st.dataframe(arima_df.style.applymap(color_survived, subset=['漲跌']))
                 df_xlsx = to_excel(arima_df)
                 st.write('📥')
@@ -351,6 +364,7 @@ if st.sidebar.button('Confirm'):
                 st.write('''🔔\f
                     如果遇到國定假日，該平日請直接忽略預測值''')
                 #st.dataframe(sarima_df)
+                sarima_df['漲跌'] = sarima_df['漲跌'].astype(float)
                 st.dataframe(sarima_df.style.applymap(color_survived, subset=['漲跌']))
                 df_xlsx = to_excel(sarima_df)
                 st.write('📥')
@@ -374,6 +388,7 @@ if st.sidebar.button('Confirm'):
                 st.write('''🔔\f
                     如果遇到國定假日，該平日請直接忽略預測值''')
                 #st.dataframe(gbm_df)
+                gbm_df['漲跌'] = gbm_df['漲跌'].astype(float)
                 st.dataframe(gbm_df.style.applymap(color_survived, subset=['漲跌']))
                 df_xlsx = to_excel(gbm_df)
                 st.write('📥')
@@ -445,6 +460,7 @@ if st.sidebar.button('Confirm'):
             st.header('{}月份預測數值名單'.format(mm))
             st.write('''🔔\f
                 如果遇到國定假日，該平日請直接忽略預測值''')
+            wma_df['漲跌'] = wma_df['漲跌'].astype(float)
             st.dataframe(wma_df.style.applymap(color_survived, subset=['漲跌']))
             #st.dataframe(wma_df)
             df_xlsx = to_excel(wma_df)
@@ -478,6 +494,7 @@ if st.sidebar.button('Confirm'):
             st.write('''🔔\f
                 如果遇到國定假日，該平日請直接忽略預測值''')
             #st.dataframe(arima_df)
+            arima_df['漲跌'] = arima_df['漲跌'].astype(float)
             st.dataframe(arima_df.style.applymap(color_survived, subset=['漲跌']))
             df_xlsx = to_excel(arima_df)
             st.write('📥')
@@ -512,6 +529,7 @@ if st.sidebar.button('Confirm'):
             st.write('''🔔\f
                 如果遇到國定假日，該平日請直接忽略預測值''')
             #st.dataframe(sarima_df)
+            sarima_df['漲跌'] = sarima_df['漲跌'].astype(float)
             st.dataframe(sarima_df.style.applymap(color_survived, subset=['漲跌']))
             df_xlsx = to_excel(sarima_df)
             st.write('📥')
@@ -540,6 +558,7 @@ if st.sidebar.button('Confirm'):
             st.header('{}月份預測數值名單'.format(mm))
             st.write('''🔔\f
                 如果遇到國定假日，該平日請直接忽略預測值''')
+            wma_df['漲跌'] = wma_df['漲跌'].astype(float)
             st.dataframe(wma_df.style.applymap(color_survived, subset=['漲跌']))
             #st.dataframe(wma_df)
             df_xlsx = to_excel(wma_df)
@@ -573,6 +592,7 @@ if st.sidebar.button('Confirm'):
             st.write('''🔔\f
                 如果遇到國定假日，該平日請直接忽略預測值''')
             #st.dataframe(arima_df)
+            arima_df['漲跌'] = arima_df['漲跌'].astype(float)
             st.dataframe(arima_df.style.applymap(color_survived, subset=['漲跌']))
             df_xlsx = to_excel(arima_df)
             st.write('📥')
@@ -607,6 +627,7 @@ if st.sidebar.button('Confirm'):
             st.write('''🔔\f
                 如果遇到國定假日，該平日請直接忽略預測值''')
             #st.dataframe(sarima_df)
+            sarima_df['漲跌'] = sarima_df['漲跌'].astype(float)
             st.dataframe(sarima_df.style.applymap(color_survived, subset=['漲跌']))
             df_xlsx = to_excel(sarima_df)
             st.write('📥')
