@@ -18,12 +18,9 @@ If you have any demands or questions, do not hesitate to reach out to me. Thanks
   
   
   
-  
-  
-  
 Sincerely.  
-Peloton Interactive. 
+Peloton Interactive.  
   
 Jennings Chan. 
 Supply Chain Planner, TWSCM.  
-jennings.chan@onepeloton.com. 
+jennings.chan@onepeloton.com.  
