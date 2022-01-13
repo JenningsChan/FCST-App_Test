@@ -1,6 +1,6 @@
 ## Material Price FCST App by Jennings
 
-In my App, you can choose **paper **plastic **iron **aluminum **US dollar  
+In my App, you can choose **paper** **plastic** **iron** **aluminum** **US dollar**  
 to predict the trend of stock price.  
 
 I've also built 5 models to predict 1/3/6 months to let you follow short-term and mid-term trend.  
