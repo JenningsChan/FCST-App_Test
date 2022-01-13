@@ -19,7 +19,7 @@ from pyxlsb import open_workbook as open_xlsb
 import plotly.express as px 
 from dateutil.relativedelta import relativedelta
 from xlsxwriter import Workbook
-
+from openpyxl import load_workbook
 #%matplotlib inline
 
 def to_excel(df):
@@ -40,7 +40,12 @@ def color_survived(val):
 
 @st.cache(allow_output_mutation=True)
 def load_data(path):
-    df = pd.read_excel(path, index_col=0)
+    wb = load_workbook(filename=target_path,read_only=False ,data_only=True, keep_vba=True)
+    ws = wb.active
+    ws = wb['Sheet1']
+    df = pd.DataFrame(ws.values).iloc[:,1:]
+    df.columns = df.loc[0]
+    df = df.iloc[1:,:]
     return df
 ##############################################STREAMLIT####################################################
 
