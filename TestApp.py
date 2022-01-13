@@ -46,7 +46,7 @@ def load_data(path):
 
 ###################Page Title##################
 
-image = Image.open('/Users/jennings.chan/Desktop/peloton-logo.png')
+image = Image.open('./peloton-logo.png')
 
 st.image(image, use_column_width=True)
 st.markdown('***Designed by Jennings Chan *** \f\f\f 📩\f *** jennings.chan@onepeloton.com***')
