@@ -5,7 +5,7 @@ In my App, you can choose **PAPER**/**PLASTIC**/**IRON**/**ALUMINUM**/**US DOLLA
 I've also built 5 models to predict **1**/**3**/**6** months to let you follow short-term and mid-term trend.  
 <br /> 
 Here is my URL:  
-https://share.streamlit.io/jenningschan/fcst-app_test/TestApp.py. 
+https://share.streamlit.io/jenningschan/fcst-app_test/TestApp.py
 <br />   
 If you have any demands or questions, do not hesitate to reach out to me. Thanks.  
 <br />  
