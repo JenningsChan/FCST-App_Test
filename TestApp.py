@@ -121,16 +121,16 @@ if st.sidebar.button('Confirm'):
         ## 近日開盤價 - {}
         """.format(product)
     )
-    st.metric(label="Material Price {}".format(price_data.index[-1].strftime('%Y-%m-%d')),value = stock_engine.stock_data['Open'][-1], delta=round(stock_engine.stock_data['Open'][-2]-stock_engine.stock_data['Open'][-1],2))
+    st.metric(label="Material Price {}".format(price_data.index[-1].strftime('%Y-%m-%d')),value = price_data['Open'][-1], delta=round(price_data['Open'][-2]-price_data['Open'][-1],2))
     st.write(
         """
         ## 歷史開盤價 - {}
         """.format(product)
     )
-    st.write('**歷史平均股價為{}**'.format(round(np.mean(stock_engine.stock_data['Open']),2)))
+    st.write('**歷史平均股價為{}**'.format(round(np.mean(price_data['Open']),2)))
     st.write("原物料如為鋁，則價格單位為USD")
 
-    st.line_chart(stock_engine.stock_data.Open)
+    st.line_chart(price_data.Open)
     if stock_number == 'USD/TWD':
         stock_number = "USD:TWD" 
     if predicted_interval == 1:
