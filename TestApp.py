@@ -7,10 +7,10 @@ import streamlit as st
 from PIL import Image
 import sys
 sys.path.append("./Tools")
-from Trend_Analysis3 import Data, cal_Tool
+from Trend_Analysis2 import Data, cal_Tool
 import pandas as pd
-import yfinance as yf
-import matplotlib.pyplot as plt
+#import yfinance as yf
+#import matplotlib.pyplot as plt
 import numpy as np
 import datetime
 from io import BytesIO
@@ -102,18 +102,18 @@ if st.sidebar.button('Confirm'):
     if stock_number == 'Aluminum':
         price_data = investpy.get_commodity_historical_data(commodity= stock_number,
                                                             country = "united kingdom", 
-                                                            from_date='01/01/2022', 
+                                                            from_date='01/01/2010', 
                                                             to_date=datetime.datetime(yyyy, mm, calendar.monthrange(yyyy, mm)[1]).strftime('%d/%m/%Y')
                                                             )
     elif stock_number in ('Taiwan Paper','Taiwan Steel','Taiwan Plastic'):
         price_data = investpy.indices.get_index_historical_data(index = stock_number, 
                                         country = 'Taiwan', 
-                                        from_date = '01/01/2022', 
+                                        from_date = '01/01/2010', 
                                         to_date = datetime.datetime(yyyy, mm, calendar.monthrange(yyyy, mm)[1]).strftime('%d/%m/%Y')
                                         )
     else:
         price_data = investpy.currency_crosses.get_currency_cross_historical_data(currency_cross = stock_number, 
-                                                    from_date = '01/01/2022', 
+                                                    from_date = '01/01/2010', 
                                                     to_date = datetime.datetime(yyyy, mm, calendar.monthrange(yyyy, mm)[1]).strftime('%d/%m/%Y')
                                                 )
     st.write(
@@ -121,16 +121,16 @@ if st.sidebar.button('Confirm'):
         ## 近日開盤價 - {}
         """.format(product)
     )
-    st.metric(label="Material Price {}".format(price_data.index[-1].strftime('%Y-%m-%d')),value = stock_engine.stock_data['Open'][-1], delta=round(stock_engine.stock_data['Open'][-2]-stock_engine.stock_data['Open'][-1],2))
+    st.metric(label="Material Price {}".format(price_data.index[-1].strftime('%Y-%m-%d')),value = price_data['Open'][-1], delta=round(price_data['Open'][-2]-price_data['Open'][-1],2))
     st.write(
         """
         ## 歷史開盤價 - {}
         """.format(product)
     )
-    st.write('**歷史平均股價為{}**'.format(round(np.mean(stock_engine.stock_data['Open']),2)))
+    st.write('**歷史平均股價為{}**'.format(round(np.mean(price_data['Open']),2)))
     st.write("原物料如為鋁，則價格單位為USD")
 
-    st.line_chart(stock_engine.stock_data.Open)
+    st.line_chart(price_data.Open)
     if stock_number == 'USD/TWD':
         stock_number = "USD:TWD" 
     if predicted_interval == 1:
