@@ -9,7 +9,7 @@ import sys
 sys.path.append("./Tools")
 from Trend_Analysis2 import Data, cal_Tool
 import pandas as pd
-import yfinance as yf
+#import yfinance as yf
 #import matplotlib.pyplot as plt
 import numpy as np
 import datetime
