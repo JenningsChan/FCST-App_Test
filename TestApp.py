@@ -102,18 +102,18 @@ if st.sidebar.button('Confirm'):
     if stock_number == 'Aluminum':
         price_data = investpy.get_commodity_historical_data(commodity= stock_number,
                                                             country = "united kingdom", 
-                                                            from_date='01/01/2022', 
+                                                            from_date='01/01/2010', 
                                                             to_date=datetime.datetime(yyyy, mm, calendar.monthrange(yyyy, mm)[1]).strftime('%d/%m/%Y')
                                                             )
     elif stock_number in ('Taiwan Paper','Taiwan Steel','Taiwan Plastic'):
         price_data = investpy.indices.get_index_historical_data(index = stock_number, 
                                         country = 'Taiwan', 
-                                        from_date = '01/01/2022', 
+                                        from_date = '01/01/2010', 
                                         to_date = datetime.datetime(yyyy, mm, calendar.monthrange(yyyy, mm)[1]).strftime('%d/%m/%Y')
                                         )
     else:
         price_data = investpy.currency_crosses.get_currency_cross_historical_data(currency_cross = stock_number, 
-                                                    from_date = '01/01/2022', 
+                                                    from_date = '01/01/2010', 
                                                     to_date = datetime.datetime(yyyy, mm, calendar.monthrange(yyyy, mm)[1]).strftime('%d/%m/%Y')
                                                 )
     st.write(
