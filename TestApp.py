@@ -644,7 +644,7 @@ if st.sidebar.button('Confirm'):
             #st.write('**ACF圖表**') 
             #st.pyplot(acf)
         elif compare.iloc[0,0] == 'SARIMA':
-            sarima_df = load_data('./{}/6 MONTH/{}_Best_by_sarima.xlsx'.format(stock_number,stock_number))
+            sarima_df = load_data('./{}/6 MONTH/{}{}/{}_Best_by_sarima.xlsx'.format(stock_number,yyyy,mm,stock_number))
             #sarima_df = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_Best_by_sarima_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
             st.header('{}月份預測數值名單'.format(mm))
             st.write('''🔔\f
