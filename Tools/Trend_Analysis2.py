@@ -1,6 +1,6 @@
 #read me : 使用到LSTM/LightGBM/ARIMA/SARIMA/MA模型
-#可以參考的台股代號:^TPAI 造紙類報酬指數 2002.TW 中鋼 ^TPLI 塑膠類指數 待找：木頭/鋁
 #https://discuss.streamlit.io/t/ta-lib-streamlit-deploy-error/7643/4 Talib部署 超難...
+
 
 import requests
 import numpy as np
@@ -17,9 +17,7 @@ from sklearn.metrics import mean_squared_error
 from math import sqrt
 import datetime
 from typing import Tuple
-#import talib
 import lightgbm as lgb
-#from talib import MA_Type
 from sklearn.model_selection import GridSearchCV
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
@@ -33,7 +31,8 @@ import warnings
 import sys, os
 from dateutil.relativedelta import relativedelta
 from numpy.linalg import LinAlgError
-import os 
+import investpy
+import calendar
 
 def EMA(Open, timeperiod = 30, startIdx = 0):
     k = 2 / (timeperiod + 1)
@@ -301,20 +300,69 @@ class Data:
         self.mm = mm
 
     def get_stock_data(self,if_lstm): #輸入想要預測的月份
-        self.stock_data = yf.Ticker(self.stock_number)
-        self.stock_data = self.stock_data.history(period="max")
-        self.stock_data = self.stock_data.iloc[:,:4] #Open/High/Low/Close
-        self.stock_data = self.stock_data[self.stock_data.index < '{}-{}-01'.format(self.yyyy,self.mm)] #確保是直接預測目標月
-        if if_lstm == True:
-            if self.mm == 1:
-               self.stock_data_real = self.stock_data[(self.stock_data.index < '{}-{}-01'.format(self.yyyy,self.mm)) & (self.stock_data.index>= '{}-{}-01'.format(self.yyyy-1,12))] #實際驗證前一個月的MAPE                
+        if self.stock_number in ('Taiwan Paper','Taiwan Steel','Taiwan Plastic'):
+            self.stock_data = investpy.indices.get_index_historical_data(index = self.stock_number, 
+                                               country = 'Taiwan', 
+                                               from_date = '01/01/2010', 
+                                               to_date = datetime.datetime(self.yyyy, self.mm, calendar.monthrange(self.yyyy, self.mm)[1]).strftime('%d/%m/%Y')
+                                               )
+            self.stock_data = self.stock_data.iloc[:,:4] #Open/High/Low/Close
+            self.stock_data = self.stock_data[self.stock_data.index < '{}-{}-01'.format(self.yyyy,self.mm)] #確保是直接預測目標月
+            if if_lstm == True:
+                if self.mm == 1:
+                   self.stock_data_real = self.stock_data[(self.stock_data.index < '{}-{}-01'.format(self.yyyy,self.mm)) & (self.stock_data.index>= '{}-{}-01'.format(self.yyyy-1,12))] #實際驗證前一個月的MAPE                
+                else:
+                   self.stock_data_real = self.stock_data[(self.stock_data.index < '{}-{}-01'.format(self.yyyy,self.mm)) & (self.stock_data.index>= '{}-{}-01'.format(self.yyyy,self.mm-1))] #實際驗證前一個月的MAPE
             else:
-               self.stock_data_real = self.stock_data[(self.stock_data.index < '{}-{}-01'.format(self.yyyy,self.mm)) & (self.stock_data.index>= '{}-{}-01'.format(self.yyyy,self.mm-1))] #實際驗證前一個月的MAPE
+                pass
+            self.analysis_data = investpy.indices.get_index_historical_data(index = self.stock_number, 
+                                               country = 'Taiwan', 
+                                               from_date = '01/01/2010', 
+                                               to_date = datetime.datetime(self.yyyy, self.mm, calendar.monthrange(self.yyyy, self.mm)[1]).strftime('%d/%m/%Y')
+                                               )
+            self.analysis_data = self.analysis_data.iloc[:,:4] 
+        elif self.stock_number == 'Aluminum':
+            self.stock_data = investpy.get_commodity_historical_data(commodity= self.stock_number,
+                                                                country = "united kingdom", 
+                                                                from_date='01/01/2010', 
+                                                                to_date=datetime.datetime(self.yyyy, self.mm, calendar.monthrange(self.yyyy, self.mm)[1]).strftime('%d/%m/%Y')
+                                                               )
+            self.stock_data = self.stock_data.iloc[:,:4] #Open/High/Low/Close
+            self.stock_data = self.stock_data[self.stock_data.index < '{}-{}-01'.format(self.yyyy,self.mm)] #確保是直接預測目標月
+            if if_lstm == True:
+                if self.mm == 1:
+                   self.stock_data_real = self.stock_data[(self.stock_data.index < '{}-{}-01'.format(self.yyyy,self.mm)) & (self.stock_data.index>= '{}-{}-01'.format(self.yyyy-1,12))] #實際驗證前一個月的MAPE                
+                else:
+                   self.stock_data_real = self.stock_data[(self.stock_data.index < '{}-{}-01'.format(self.yyyy,self.mm)) & (self.stock_data.index>= '{}-{}-01'.format(self.yyyy,self.mm-1))] #實際驗證前一個月的MAPE
+            else:
+                pass
+            self.analysis_data = investpy.get_commodity_historical_data(commodity=self.stock_number,
+                                                                country = "united kingdom", 
+                                                                from_date='01/01/2010', 
+                                                                to_date=datetime.datetime(self.yyyy, self.mm, calendar.monthrange(self.yyyy, self.mm)[1]).strftime('%d/%m/%Y')
+                                                               )
+            self.analysis_data = self.analysis_data.iloc[:,:4] 
         else:
-            pass
-        self.analysis_data = yf.Ticker(self.stock_number)
-        self.analysis_data = self.analysis_data.history(period="max")
-        self.analysis_data = self.analysis_data.iloc[:,:4] 
+            self.stock_data = investpy.currency_crosses.get_currency_cross_historical_data(currency_cross = self.stock_number, 
+                                                             from_date = '01/01/2010', 
+                                                             to_date = datetime.datetime(self.yyyy, self.mm, calendar.monthrange(self.yyyy, self.mm)[1]).strftime('%d/%m/%Y')
+                                                            )
+            self.stock_data = self.stock_data.iloc[:,:4] #Open/High/Low/Close
+            self.stock_data = self.stock_data[self.stock_data.index < '{}-{}-01'.format(self.yyyy,self.mm)] #確保是直接預測目標月
+            if if_lstm == True:
+                if self.mm == 1:
+                   self.stock_data_real = self.stock_data[(self.stock_data.index < '{}-{}-01'.format(self.yyyy,self.mm)) & (self.stock_data.index>= '{}-{}-01'.format(self.yyyy-1,12))] #實際驗證前一個月的MAPE                
+                else:
+                   self.stock_data_real = self.stock_data[(self.stock_data.index < '{}-{}-01'.format(self.yyyy,self.mm)) & (self.stock_data.index>= '{}-{}-01'.format(self.yyyy,self.mm-1))] #實際驗證前一個月的MAPE
+            else:
+                pass
+            self.analysis_data = investpy.currency_crosses.get_currency_cross_historical_data(currency_cross = self.stock_number, 
+                                                             from_date = '01/01/2010', 
+                                                             to_date = datetime.datetime(self.yyyy, self.mm, calendar.monthrange(self.yyyy, self.mm)[1]).strftime('%d/%m/%Y')
+                                                            )
+            self.analysis_data = self.analysis_data.iloc[:,:4] 
+            
+            
     
     def get_analysis_index(self,df,post_open):
         calculate = cal_Tool()
@@ -1015,7 +1063,7 @@ class Model:
                 diff_1.head()
                 #diff_1.plot(figsize=(6,4), label="diff_1")
                 #plt.legend()
-                calculate.adf_test(diff_1)
+                test_signal = calculate.adf_test(diff_1)
                 best_d = 1
                 if test_signal == True:
                     best_d = 2
@@ -1179,32 +1227,25 @@ class Model:
         fc, conf = smodel.predict(target_days, alpha=0.05,return_conf_int=True) # 95% conf
         fc_series = pd.Series(fc)
         return fc_series, TestScore,test_plot
-        
-        
-############Implementation################
 
 if __name__ == "__main__":
     warnings.filterwarnings('ignore')
-    stock_numbers = ['^TPAI','^TPLI','2002.TW','601600.SS','USDTWD=X']
+    stock_numbers = ['Taiwan Paper','Taiwan Steel','Taiwan Plastic','Aluminum','USD/TWD']
     predicted_intervals = [1,3,6]
     yyyy = 2022
     mm = 1
     for stock_number in stock_numbers:
-        os.mkdir('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}'.format(stock_number,yyyy,mm))
-        os.mkdir('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}'.format(stock_number,yyyy,mm))
-        os.mkdir('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}'.format(stock_number,yyyy,mm))
-        if stock_number == '^TPAI':
-            product = 'Paper'
-        elif stock_number == '^TPLI':
-            product = 'Plastic'
-        elif stock_number == '2002.TW':
-            product = 'Iron'
-        elif stock_number == '601600.SS':
-            product = 'Aluminum'
-        elif stock_number == 'USDTWD=X':
-            product = 'US Dollar'
+        if stock_number == 'USD/TWD':
+           stock_number = "USD:TWD" 
+        if not os.path.exists('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}'.format(stock_number,yyyy,mm)):
+            os.mkdir('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}'.format(stock_number,yyyy,mm))
+            os.mkdir('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}'.format(stock_number,yyyy,mm))
+            os.mkdir('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}'.format(stock_number,yyyy,mm))
+        product = stock_number
         for predicted_interval in predicted_intervals:
-            stock_engine = Data(stock_number = stock_number,yyyy=yyyy,mm=mm)
+            if stock_number == 'USD:TWD':
+                stock_number = "USD/TWD" 
+            stock_engine = Data(stock_number = stock_number,yyyy=yyyy,mm=mm)           
             if predicted_interval == 1:
                 print('{} {} 開始訓練'.format(product, predicted_interval))
                 #LSTM
@@ -1297,6 +1338,9 @@ if __name__ == "__main__":
                             weekdays.append(str(day))
                     except:
                         pass
+                if stock_number == 'USD/TWD':
+                    stock_number = "USD:TWD"
+                    product = "USD:TWD"
                 compare.to_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
                 if compare.iloc[0,0]== 'LightGBM' and score_gbm_acc <= 0.6:
                     print("""最佳預測模型：{}""".format(compare.iloc[1,0]))
@@ -1324,7 +1368,7 @@ if __name__ == "__main__":
                         ets_b.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_arima_ets_b.png'.format(stock_number,yyyy,mm,product))
                         ets_c.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_arima_ets_c.png'.format(stock_number,yyyy,mm,product))
                         ets_d.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_arima_ets_d.png'.format(stock_number,yyyy,mm,product))
-                        acf.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_arima_acf.png'.format(stock_number,yyyy,mm,produc))
+                        acf.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_arima_acf.png'.format(stock_number,yyyy,mm,product))
  
                     elif compare.iloc[1,0] == 'SARIMA':
                         sarima_df = pd.DataFrame(list_sarima.values,columns = ['FCST'],index = weekdays) 
@@ -1355,7 +1399,7 @@ if __name__ == "__main__":
                         ets_b.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_arima_ets_b.png'.format(stock_number,yyyy,mm,product))
                         ets_c.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_arima_ets_c.png'.format(stock_number,yyyy,mm,product))
                         ets_d.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_arima_ets_d.png'.format(stock_number,yyyy,mm,product))
-                        acf.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_arima_acf.png'.format(stock_number,yyyy,mm,produc))
+                        acf.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/{}_arima_acf.png'.format(stock_number,yyyy,mm,product))
                     elif compare.iloc[0,0] == 'SARIMA':
                         sarima_df = pd.DataFrame(list_sarima.values,columns = ['FCST'],index = weekdays) 
                         sarima_df['漲跌'] = sarima_df['FCST'] -  sarima_df['FCST'].shift(1)
@@ -1408,6 +1452,9 @@ if __name__ == "__main__":
                 compare = pd.DataFrame(com,columns=["model","score"])
                 compare.sort_values('score',inplace=True)
                 compare.reset_index(drop = True,inplace=True)
+                if stock_number == 'USD/TWD':
+                    stock_number = "USD:TWD"
+                    product = "USD:TWD"
                 compare.to_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
                 calculate = cal_Tool()
                 new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).year
@@ -1438,13 +1485,12 @@ if __name__ == "__main__":
                     ets_b.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_arima_ets_b.png'.format(stock_number,yyyy,mm,product))
                     ets_c.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_arima_ets_c.png'.format(stock_number,yyyy,mm,product))
                     ets_d.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_arima_ets_d.png'.format(stock_number,yyyy,mm,product))
-                    acf.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_arima_acf.png'.format(stock_number,yyyy,mm,produc))
+                    acf.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_arima_acf.png'.format(stock_number,yyyy,mm,product))
                 elif compare.iloc[0,0] == 'SARIMA':
                     sarima_df = pd.DataFrame(list_sarima.values,columns = ['FCST'],index = weekdays) 
                     sarima_df['漲跌'] = sarima_df['FCST'] -  sarima_df['FCST'].shift(1)
                     sarima_df.to_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_Best_by_sarima.xlsx'.format(stock_number,yyyy,mm,product))
                     sarima_test.to_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/3 MONTH/{}{}/{}_for_sarima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))
-
             elif predicted_interval == 6:
                 print('{} {} 開始訓練'.format(product, predicted_interval))
                 stock_engine.get_stock_data(if_lstm=False)
@@ -1479,6 +1525,9 @@ if __name__ == "__main__":
                 compare = pd.DataFrame(com,columns=["model","score"])
                 compare.sort_values('score',inplace=True)
                 compare.reset_index(drop = True,inplace=True)
+                if stock_number == 'USD/TWD':
+                    stock_number = 'USD:TWD'
+                    product = "USD:TWD"
                 compare.to_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
                 calculate = cal_Tool()
                 new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).year
@@ -1509,9 +1558,9 @@ if __name__ == "__main__":
                     ets_b.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_arima_ets_b.png'.format(stock_number,yyyy,mm,product))
                     ets_c.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_arima_ets_c.png'.format(stock_number,yyyy,mm,product))
                     ets_d.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_arima_ets_d.png'.format(stock_number,yyyy,mm,product))
-                    acf.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_arima_acf.png'.format(stock_number,yyyy,mm,produc))
+                    acf.savefig('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_arima_acf.png'.format(stock_number,yyyy,mm,product))
                 elif compare.iloc[0,0] == 'SARIMA':
                     sarima_df = pd.DataFrame(list_sarima.values,columns = ['FCST'],index = weekdays) 
                     sarima_df['漲跌'] = sarima_df['FCST'] -  sarima_df['FCST'].shift(1)
                     sarima_df.to_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_Best_by_sarima.xlsx'.format(stock_number,yyyy,mm,product))
-                    sarima_test.to_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_for_sarima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))   
+                    sarima_test.to_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/6 MONTH/{}{}/{}_for_sarima_test_plot.xlsx'.format(stock_number,yyyy,mm,product))      
