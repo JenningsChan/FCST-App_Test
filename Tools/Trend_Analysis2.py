@@ -5,7 +5,6 @@
 import requests
 import numpy as np
 import pandas as pd
-import yfinance as yf
 import h5py
 from sklearn.preprocessing import MinMaxScaler 
 import keras
