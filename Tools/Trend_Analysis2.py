@@ -7,17 +7,17 @@ import numpy as np
 import pandas as pd
 import h5py
 from sklearn.preprocessing import MinMaxScaler 
-import keras
-from keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
-from keras.layers import Dropout,BatchNormalization
+#import keras
+#from keras.models import Sequential
+#from tensorflow.keras.layers import LSTM, Dense
+#from keras.layers import Dropout,BatchNormalization
 import math
 from sklearn.metrics import mean_squared_error
 from math import sqrt
 import datetime
 from typing import Tuple
-import lightgbm as lgb
-from sklearn.model_selection import GridSearchCV
+#import lightgbm as lgb
+#from sklearn.model_selection import GridSearchCV
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 import statsmodels.tsa.api as smt 
@@ -50,14 +50,6 @@ def EMA(Open, timeperiod = 30, startIdx = 0):
     output_ema[:startIdx] = np.nan
     return output_ema
 #################################################Main Functions######################################
-class HiddenPrints:
-    def __enter__(self):
-        self._original_stdout = sys.stdout
-        sys.stdout = open(os.devnull, 'w')
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        sys.stdout.close()
-        sys.stdout = self._original_stdout
 
 class cal_Tool:
 
@@ -473,759 +465,759 @@ class Data:
         three_year_ago = yyyy - 2
         self.stock_data = self.stock_data.loc[(self.stock_data['year']>=three_year_ago),:].drop('year',axis=1)
 
-class visual:
+# class visual:
     
-    def Open_Close_Trend(self,df):
-        fig=plt.figure(figsize=(20,8))
-        plt.xticks(rotation = 90) #旋轉標籤文字90度 
-        ax1 = fig.add_subplot(111) #新增子圖
-        ax1.plot(df.Close,color='red',label='close')
-        ax1.plot(df.Open,color='green',label='open')
-        plt.legend() #加入指標說明看板
-        plt.close()
-        return fig
+#     def Open_Close_Trend(self,df):
+#         fig=plt.figure(figsize=(20,8))
+#         plt.xticks(rotation = 90) #旋轉標籤文字90度 
+#         ax1 = fig.add_subplot(111) #新增子圖
+#         ax1.plot(df.Close,color='red',label='close')
+#         ax1.plot(df.Open,color='green',label='open')
+#         plt.legend() #加入指標說明看板
+#         plt.close()
+#         return fig
     
-    def Plot_Stock_Prediction(self,real,fcst,product):
-        fig = plt.figure(figsize=(16,8))
-        plt.plot(real, color = 'black', label = 'Real {} Stock Price'.format(product))
-        plt.plot(fcst, color = 'green', label = 'Predicted {} Stock Price'.format(product))
-        plt.title('{} Stock Price Prediction'.format(product))
-        plt.xlabel('Time')
-        plt.ylabel('Stock Price')
-        plt.legend()
-        plt.close()
-        return fig
-        #plt.show()
+#     def Plot_Stock_Prediction(self,real,fcst,product):
+#         fig = plt.figure(figsize=(16,8))
+#         plt.plot(real, color = 'black', label = 'Real {} Stock Price'.format(product))
+#         plt.plot(fcst, color = 'green', label = 'Predicted {} Stock Price'.format(product))
+#         plt.title('{} Stock Price Prediction'.format(product))
+#         plt.xlabel('Time')
+#         plt.ylabel('Stock Price')
+#         plt.legend()
+#         plt.close()
+#         return fig
+#         #plt.show()
     
-    def Open_Price_Trend(self,df,product):
-        fig = plt.figure(figsize=(16,8))
-        plt.plot(df['Open'], label='{} Future'.format(product)) #請自行更改label名稱
-        plt.ylabel('Price') #請自行更改y軸名稱
-        plt.legend()
-        plt.close()
-        return fig
+#     def Open_Price_Trend(self,df,product):
+#         fig = plt.figure(figsize=(16,8))
+#         plt.plot(df['Open'], label='{} Future'.format(product)) #請自行更改label名稱
+#         plt.ylabel('Price') #請自行更改y軸名稱
+#         plt.legend()
+#         plt.close()
+#         return fig
         
     
-    def ETS_Decomposition(self,df,product):
-        result = seasonal_decompose(df['Open'], model='multiplicative', freq=12)
-        ets_a = plt.figure(figsize=(30,8))
-        plt.subplot(4,1,1)
-        plt.plot(result.observed, label='{} Future'.format(product))
-        plt.ylabel('Price')
-        plt.xticks(df.index[::200], rotation=0) #調整x軸刻度的呈現(每隔12個)
-        plt.margins(0)
-        plt.close()
-        ets_b = plt.figure(figsize=(30,8))
-        plt.subplot(4,1,2)
-        plt.plot(result.trend)
-        plt.ylabel('Trend')
-        plt.xticks(df.index[::200], rotation=0)
-        plt.margins(0)
-        plt.close()
-        ets_c = plt.figure(figsize=(30,8))
-        plt.subplot(4,1,3)
-        plt.plot(result.seasonal)
-        plt.ylabel('Seasonal')
-        plt.xticks(df.index[::200], rotation=0)
-        plt.margins(0)
-        plt.close()
-        ets_d = plt.figure(figsize=(30,8))
-        plt.subplot(4,1,4)
-        plt.scatter(df.index,result.resid);
-        plt.ylabel('Resid')
-        plt.xticks(df.index[::200], rotation=0)
-        plt.margins(0)  #拆成四個subplot以利調整圖片間距、x軸刻度的呈現
-        plt.close()
-        return ets_a,ets_b,ets_c,ets_d
+#     def ETS_Decomposition(self,df,product):
+#         result = seasonal_decompose(df['Open'], model='multiplicative', freq=12)
+#         ets_a = plt.figure(figsize=(30,8))
+#         plt.subplot(4,1,1)
+#         plt.plot(result.observed, label='{} Future'.format(product))
+#         plt.ylabel('Price')
+#         plt.xticks(df.index[::200], rotation=0) #調整x軸刻度的呈現(每隔12個)
+#         plt.margins(0)
+#         plt.close()
+#         ets_b = plt.figure(figsize=(30,8))
+#         plt.subplot(4,1,2)
+#         plt.plot(result.trend)
+#         plt.ylabel('Trend')
+#         plt.xticks(df.index[::200], rotation=0)
+#         plt.margins(0)
+#         plt.close()
+#         ets_c = plt.figure(figsize=(30,8))
+#         plt.subplot(4,1,3)
+#         plt.plot(result.seasonal)
+#         plt.ylabel('Seasonal')
+#         plt.xticks(df.index[::200], rotation=0)
+#         plt.margins(0)
+#         plt.close()
+#         ets_d = plt.figure(figsize=(30,8))
+#         plt.subplot(4,1,4)
+#         plt.scatter(df.index,result.resid);
+#         plt.ylabel('Resid')
+#         plt.xticks(df.index[::200], rotation=0)
+#         plt.margins(0)  #拆成四個subplot以利調整圖片間距、x軸刻度的呈現
+#         plt.close()
+#         return ets_a,ets_b,ets_c,ets_d
     
-    def ACF_PACF(self,df):
-        f = plt.figure(facecolor='white', figsize=(16,8))
-        ax1 = f.add_subplot(211)
-        plot_acf(df['Open'], lags=24, ax=ax1);
-        ax2 = f.add_subplot(212);
-        plot_pacf(df['Open'], lags=24, ax=ax2);
-        plt.rcParams['axes.unicode_minus'] = False 
-        plt.close()
-        return f
+#     def ACF_PACF(self,df):
+#         f = plt.figure(facecolor='white', figsize=(16,8))
+#         ax1 = f.add_subplot(211)
+#         plot_acf(df['Open'], lags=24, ax=ax1);
+#         ax2 = f.add_subplot(212);
+#         plot_pacf(df['Open'], lags=24, ax=ax2);
+#         plt.rcParams['axes.unicode_minus'] = False 
+#         plt.close()
+#         return f
         
-class Model:
+# class Model:
 
-    def __init__(self,product):
-        self.product = product
+#     def __init__(self,product):
+#         self.product = product
     
-    def LSTM(self,X_train,y_train,X_test,y_test,y_train_before,y_real,sc,mm,yyyy,period):
-        keras.backend.clear_session()
-        regressor = Sequential()
-        regressor.add(LSTM(units=100,input_shape=(X_train.shape[1],1)))
-        regressor.add(Dense(units=1))
-        regressor.compile(optimizer = 'rmsprop',loss = 'mean_squared_error')
-        history = regressor.fit(X_train, y_train, epochs = 1000, batch_size = 16,verbose=0)
-        #history = regressor.fit(X_train, y_train, epochs = 10, batch_size = 16,verbose=0)
-        #plt.title('train_loss')
-        #plt.ylabel('loss')
-        #plt.xlabel('Epoch')
-        #plt.plot( history.history["loss"])
-        trainPredict = regressor.predict(X_train)
-        calculate = cal_Tool()
-        trainPredict = sc.inverse_transform(trainPredict)
-        trainScore = calculate.mean_absolute_percentage_error(y_train_before,trainPredict[:,0])
-        print('Train Score by LSTM: %.2f MAPE' % (trainScore))
-        train_plot = pd.DataFrame({'Real Stock Price':y_train_before,'Predicted Stock Price': trainPredict[:,0]}) #20220103
-        #visualization = visual()
-        #train_plot = visualization.Plot_Stock_Prediction(y_train_before,trainPredict,self.product)
-        #預測測試集
-        predicted_stock_price = regressor.predict(X_test)
-        predicted_stock_price = sc.inverse_transform(predicted_stock_price)
-        testScore = calculate.mean_absolute_percentage_error(y_test, predicted_stock_price)
-        print('Test Score by LSTM: %.2f MAPE' % (testScore))  
-        #test_plot = visualization.Plot_Stock_Prediction(y_test,predicted_stock_price,self.product)
-        test_plot = pd.DataFrame({'Real Stock Price':y_test,'Predicted Stock Price': predicted_stock_price[:,0]}) #20220103
-        if mm == 1:
-            day = calculate.month_weekdays(yyyy-1,12)
-        else:
-            day = calculate.month_weekdays(yyyy,mm-1)
-        #for_pred_input是為了滾到預測抓出來的最後十筆資料
-        total_inputs = y_test[-period:].tolist()
-        predict_list = []
-        for i in range(0,day):
-            inputs = np.array(total_inputs).reshape(-1,1)
-            inputs = sc.transform(inputs)
-            X_test = []
-            X_test.append(inputs[-period:, 0])
-            X_test = np.array(X_test)
-            X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
-            #print(X_test)
-            predicted_stock_price = regressor.predict(X_test) 
-            predicted_stock_price = sc.inverse_transform(predicted_stock_price)
-            #print(predicted_stock_price)
-            total_inputs.append(predicted_stock_price[0][0])
-            predict_list.append(predicted_stock_price[0][0])
-        if len(predict_list) > len(y_real): #因為有國定假日
-            predict_list = predict_list[:len(y_real)]
-        #print(predict_list)
-        RealTestScore = calculate.mean_absolute_percentage_error(y_real, np.array(predict_list))
-        print('Real Test Score by LSTM: %.2f MAPE' % (RealTestScore))        
-        #real_plot = visualization.Plot_Stock_Prediction(y_real,np.array(predict_list),self.product)
-        real_plot = pd.DataFrame({'Real Stock Price':y_real,'Predicted Stock Price': np.array(predict_list)}) #20220103
-        total_inputs = y_real[-period:].tolist()
-        day = calculate.month_weekdays(yyyy,mm)
-        output_list = []
-        for i in range(0,day):
-            inputs = np.array(total_inputs).reshape(-1,1)
-            inputs = sc.transform(inputs)
-            X_test = []
-            X_test.append(inputs[-period:, 0])
-            X_test = np.array(X_test)
-            X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
-            predicted_stock_price = regressor.predict(X_test) 
-            predicted_stock_price = sc.inverse_transform(predicted_stock_price)
-            total_inputs.append(predicted_stock_price[0][0])
-            output_list.append(predicted_stock_price[0][0]) 
-        return output_list, RealTestScore,train_plot,test_plot,real_plot
+#     def LSTM(self,X_train,y_train,X_test,y_test,y_train_before,y_real,sc,mm,yyyy,period):
+#         keras.backend.clear_session()
+#         regressor = Sequential()
+#         regressor.add(LSTM(units=100,input_shape=(X_train.shape[1],1)))
+#         regressor.add(Dense(units=1))
+#         regressor.compile(optimizer = 'rmsprop',loss = 'mean_squared_error')
+#         history = regressor.fit(X_train, y_train, epochs = 1000, batch_size = 16,verbose=0)
+#         #history = regressor.fit(X_train, y_train, epochs = 10, batch_size = 16,verbose=0)
+#         #plt.title('train_loss')
+#         #plt.ylabel('loss')
+#         #plt.xlabel('Epoch')
+#         #plt.plot( history.history["loss"])
+#         trainPredict = regressor.predict(X_train)
+#         calculate = cal_Tool()
+#         trainPredict = sc.inverse_transform(trainPredict)
+#         trainScore = calculate.mean_absolute_percentage_error(y_train_before,trainPredict[:,0])
+#         print('Train Score by LSTM: %.2f MAPE' % (trainScore))
+#         train_plot = pd.DataFrame({'Real Stock Price':y_train_before,'Predicted Stock Price': trainPredict[:,0]}) #20220103
+#         #visualization = visual()
+#         #train_plot = visualization.Plot_Stock_Prediction(y_train_before,trainPredict,self.product)
+#         #預測測試集
+#         predicted_stock_price = regressor.predict(X_test)
+#         predicted_stock_price = sc.inverse_transform(predicted_stock_price)
+#         testScore = calculate.mean_absolute_percentage_error(y_test, predicted_stock_price)
+#         print('Test Score by LSTM: %.2f MAPE' % (testScore))  
+#         #test_plot = visualization.Plot_Stock_Prediction(y_test,predicted_stock_price,self.product)
+#         test_plot = pd.DataFrame({'Real Stock Price':y_test,'Predicted Stock Price': predicted_stock_price[:,0]}) #20220103
+#         if mm == 1:
+#             day = calculate.month_weekdays(yyyy-1,12)
+#         else:
+#             day = calculate.month_weekdays(yyyy,mm-1)
+#         #for_pred_input是為了滾到預測抓出來的最後十筆資料
+#         total_inputs = y_test[-period:].tolist()
+#         predict_list = []
+#         for i in range(0,day):
+#             inputs = np.array(total_inputs).reshape(-1,1)
+#             inputs = sc.transform(inputs)
+#             X_test = []
+#             X_test.append(inputs[-period:, 0])
+#             X_test = np.array(X_test)
+#             X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+#             #print(X_test)
+#             predicted_stock_price = regressor.predict(X_test) 
+#             predicted_stock_price = sc.inverse_transform(predicted_stock_price)
+#             #print(predicted_stock_price)
+#             total_inputs.append(predicted_stock_price[0][0])
+#             predict_list.append(predicted_stock_price[0][0])
+#         if len(predict_list) > len(y_real): #因為有國定假日
+#             predict_list = predict_list[:len(y_real)]
+#         #print(predict_list)
+#         RealTestScore = calculate.mean_absolute_percentage_error(y_real, np.array(predict_list))
+#         print('Real Test Score by LSTM: %.2f MAPE' % (RealTestScore))        
+#         #real_plot = visualization.Plot_Stock_Prediction(y_real,np.array(predict_list),self.product)
+#         real_plot = pd.DataFrame({'Real Stock Price':y_real,'Predicted Stock Price': np.array(predict_list)}) #20220103
+#         total_inputs = y_real[-period:].tolist()
+#         day = calculate.month_weekdays(yyyy,mm)
+#         output_list = []
+#         for i in range(0,day):
+#             inputs = np.array(total_inputs).reshape(-1,1)
+#             inputs = sc.transform(inputs)
+#             X_test = []
+#             X_test.append(inputs[-period:, 0])
+#             X_test = np.array(X_test)
+#             X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
+#             predicted_stock_price = regressor.predict(X_test) 
+#             predicted_stock_price = sc.inverse_transform(predicted_stock_price)
+#             total_inputs.append(predicted_stock_price[0][0])
+#             output_list.append(predicted_stock_price[0][0]) 
+#         return output_list, RealTestScore,train_plot,test_plot,real_plot
     
-    def WMA(self,df,yyyy,mm,period,y_real,predicted_span):
-       #matype 0 代表 SMA，1 代表 EMA，2 代表 WMA，3 代表 DEMA，4 代表 TEMA
-        if predicted_span == 1:
-            calculate = cal_Tool()
-            if mm == 1:
-                df = df[df.index < '{}-{}-01'.format(yyyy-1,12)]
-            else:
-                df = df[df.index < '{}-{}-01'.format(yyyy,mm-1)]
-            df1 = pd.DataFrame(calculate.weightedmovingaverage(df['Open'].values,period = period),index=df.index[period-1:],columns=['WMA'])
-            df['wma_short'] = df1
-            ma_fig = pd.DataFrame(df[['wma_short','Open']][-100:])
-            ma_fig.rename(columns={'wma_short':'Predicted Stock Price','Open':'Real Stock Price'},inplace = True)
-            #ma_fig =  plt.figure(figsize=(16,8))
-            #plt.plot(df[['wma_short','Open']][-100:]) 
-            #plt.title('WMA pred v.s. Actual historical data')
-            #plt.close()
-            na_num =  df['wma_short'].isna().sum()
-            BeforeFCSTScore = calculate.mean_absolute_percentage_error(df['Open'][na_num:].values, df['wma_short'][na_num:].values)
-            print('預測前計算分數 by WMA: %.2f MAPE' % (BeforeFCSTScore))
-            if mm == 1:
-                day = calculate.month_weekdays(yyyy-1,12)
-            else:
-                day = calculate.month_weekdays(yyyy,mm-1)
-            total_inputs = df['Open'][-period:].values.tolist()
-            predict_list = []
-            for i in range(0,day):
-                inputs = np.array(total_inputs).reshape(-1,1)
-                X_test = []
-                X_test.append(inputs[-period:,0])
-                X_test = np.array(X_test)
-                X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
-                predicted_stock_price = calculate.weightedmovingaverage(X_test, period = period)
-                total_inputs.append(predicted_stock_price[0])
-                predict_list.append(predicted_stock_price[0])
-            if len(predict_list) > len(y_real): #因為有國定假日
-                predict_list = predict_list[:len(y_real)]
-            RealScore = calculate.mean_absolute_percentage_error(y_real.values, predict_list)
-            print('預測分數 by WMA: %.2f MAPE' % (RealScore))
-            #visualization = visual()
-            #plot = visualization.Plot_Stock_Prediction(y_real.values,np.array(predict_list),self.product)
-            plot = pd.DataFrame({'Real Stock Price':y_real.values,'Predicted Stock Price': np.array(predict_list)},index = y_real.index) #20220103
-            #預測未來一個月
-            day = calculate.month_weekdays(yyyy,mm)
-            total_inputs = y_real[-period:].values.tolist()
-            total_predict_list = []
-            for i in range(0,day):
-                inputs = np.array(total_inputs).reshape(-1,1)
-                X_test = []
-                X_test.append(inputs[-period:,0])
-                X_test = np.array(X_test)
-                X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
-                predicted_stock_price = calculate.weightedmovingaverage(X_test, period = period)
-                total_inputs.append(predicted_stock_price[0])
-                total_predict_list.append(predicted_stock_price[0])
-        elif predicted_span == 3:
-            calculate = cal_Tool()
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).month
-            df = df[df.index < '{}-{}-01'.format(new_yyyy,new_mm)] #這邊需要以三個月作為測試集
-            df1 = pd.DataFrame(calculate.weightedmovingaverage(df['Open'].values,period = period),index=df.index[period-1:],columns=['WMA'])
-            df['wma_short'] = df1
-            ma_fig = pd.DataFrame(df[['wma_short','Open']][-100:])
-            ma_fig.rename(columns={'wma_short':'Predicted Stock Price','Open':'Real Stock Price'},inplace = True)
-            #ma_fig =  plt.figure(figsize=(16,8))
-            #plt.plot(df[['wma_short','Open']][-100:]) 
-            #plt.title('WMA pred v.s. Actual historical data')
-            #plt.close()
-            na_num =  df['wma_short'].isna().sum()
-            BeforeFCSTScore = calculate.mean_absolute_percentage_error(df['Open'][na_num:].values, df['wma_short'][na_num:].values)
-            print('預測前計算分數 by WMA: %.2f MAPE' % (BeforeFCSTScore))
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).month
-            end_dt = datetime.date(yyyy,mm,1)
-            start_dt = datetime.date(new_yyyy,new_mm,1)
+#     def WMA(self,df,yyyy,mm,period,y_real,predicted_span):
+#        #matype 0 代表 SMA，1 代表 EMA，2 代表 WMA，3 代表 DEMA，4 代表 TEMA
+#         if predicted_span == 1:
+#             calculate = cal_Tool()
+#             if mm == 1:
+#                 df = df[df.index < '{}-{}-01'.format(yyyy-1,12)]
+#             else:
+#                 df = df[df.index < '{}-{}-01'.format(yyyy,mm-1)]
+#             df1 = pd.DataFrame(calculate.weightedmovingaverage(df['Open'].values,period = period),index=df.index[period-1:],columns=['WMA'])
+#             df['wma_short'] = df1
+#             ma_fig = pd.DataFrame(df[['wma_short','Open']][-100:])
+#             ma_fig.rename(columns={'wma_short':'Predicted Stock Price','Open':'Real Stock Price'},inplace = True)
+#             #ma_fig =  plt.figure(figsize=(16,8))
+#             #plt.plot(df[['wma_short','Open']][-100:]) 
+#             #plt.title('WMA pred v.s. Actual historical data')
+#             #plt.close()
+#             na_num =  df['wma_short'].isna().sum()
+#             BeforeFCSTScore = calculate.mean_absolute_percentage_error(df['Open'][na_num:].values, df['wma_short'][na_num:].values)
+#             print('預測前計算分數 by WMA: %.2f MAPE' % (BeforeFCSTScore))
+#             if mm == 1:
+#                 day = calculate.month_weekdays(yyyy-1,12)
+#             else:
+#                 day = calculate.month_weekdays(yyyy,mm-1)
+#             total_inputs = df['Open'][-period:].values.tolist()
+#             predict_list = []
+#             for i in range(0,day):
+#                 inputs = np.array(total_inputs).reshape(-1,1)
+#                 X_test = []
+#                 X_test.append(inputs[-period:,0])
+#                 X_test = np.array(X_test)
+#                 X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
+#                 predicted_stock_price = calculate.weightedmovingaverage(X_test, period = period)
+#                 total_inputs.append(predicted_stock_price[0])
+#                 predict_list.append(predicted_stock_price[0])
+#             if len(predict_list) > len(y_real): #因為有國定假日
+#                 predict_list = predict_list[:len(y_real)]
+#             RealScore = calculate.mean_absolute_percentage_error(y_real.values, predict_list)
+#             print('預測分數 by WMA: %.2f MAPE' % (RealScore))
+#             #visualization = visual()
+#             #plot = visualization.Plot_Stock_Prediction(y_real.values,np.array(predict_list),self.product)
+#             plot = pd.DataFrame({'Real Stock Price':y_real.values,'Predicted Stock Price': np.array(predict_list)},index = y_real.index) #20220103
+#             #預測未來一個月
+#             day = calculate.month_weekdays(yyyy,mm)
+#             total_inputs = y_real[-period:].values.tolist()
+#             total_predict_list = []
+#             for i in range(0,day):
+#                 inputs = np.array(total_inputs).reshape(-1,1)
+#                 X_test = []
+#                 X_test.append(inputs[-period:,0])
+#                 X_test = np.array(X_test)
+#                 X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
+#                 predicted_stock_price = calculate.weightedmovingaverage(X_test, period = period)
+#                 total_inputs.append(predicted_stock_price[0])
+#                 total_predict_list.append(predicted_stock_price[0])
+#         elif predicted_span == 3:
+#             calculate = cal_Tool()
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).month
+#             df = df[df.index < '{}-{}-01'.format(new_yyyy,new_mm)] #這邊需要以三個月作為測試集
+#             df1 = pd.DataFrame(calculate.weightedmovingaverage(df['Open'].values,period = period),index=df.index[period-1:],columns=['WMA'])
+#             df['wma_short'] = df1
+#             ma_fig = pd.DataFrame(df[['wma_short','Open']][-100:])
+#             ma_fig.rename(columns={'wma_short':'Predicted Stock Price','Open':'Real Stock Price'},inplace = True)
+#             #ma_fig =  plt.figure(figsize=(16,8))
+#             #plt.plot(df[['wma_short','Open']][-100:]) 
+#             #plt.title('WMA pred v.s. Actual historical data')
+#             #plt.close()
+#             na_num =  df['wma_short'].isna().sum()
+#             BeforeFCSTScore = calculate.mean_absolute_percentage_error(df['Open'][na_num:].values, df['wma_short'][na_num:].values)
+#             print('預測前計算分數 by WMA: %.2f MAPE' % (BeforeFCSTScore))
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).month
+#             end_dt = datetime.date(yyyy,mm,1)
+#             start_dt = datetime.date(new_yyyy,new_mm,1)
 
-            days = list()
-            weekend = [5,6]
-            for dt in calculate.daterange(start_dt, end_dt):
-                if dt.weekday() not in weekend:
-                    if dt != end_dt:
-                       days.append(dt.strftime("%Y-%m-%d"))
-            days = len(days)
-            total_inputs = df['Open'][-period:].values.tolist()
-            predict_list = []
-            for i in range(0,days):
-                inputs = np.array(total_inputs).reshape(-1,1)
-                X_test = []
-                X_test.append(inputs[-period:,0])
-                X_test = np.array(X_test)
-                X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
-                predicted_stock_price = calculate.weightedmovingaverage(X_test, period = period)
-                total_inputs.append(predicted_stock_price[0])
-                predict_list.append(predicted_stock_price[0])
-            if len(predict_list) > len(y_real): #因為有國定假日
-                predict_list = predict_list[:len(y_real)]
-            RealScore = calculate.mean_absolute_percentage_error(y_real.values, predict_list)
-            print('預測分數 by WMA: %.2f MAPE' % (RealScore))
-            #visualization = visual()
-            #plot = visualization.Plot_Stock_Prediction(y_real.values,np.array(predict_list),self.product)
-            plot = pd.DataFrame({'Real Stock Price':y_real.values,'Predicted Stock Price': np.array(predict_list)},index = y_real.index) #20220103
-            #預測未來三個月
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).month
-            start_dt = datetime.date(yyyy,mm,1)
-            end_dt = datetime.date(new_yyyy,new_mm,1)
-            fcst_days = 0
-            weekend = [5,6]
-            for dt in calculate.daterange(start_dt, end_dt):
-                if dt.weekday() not in weekend:
-                    if dt != end_dt:
-                       fcst_days += 1
-            total_inputs = y_real[-period:].values.tolist()
-            total_predict_list = []
-            for i in range(0,fcst_days):
-                inputs = np.array(total_inputs).reshape(-1,1)
-                X_test = []
-                X_test.append(inputs[-period:,0])
-                X_test = np.array(X_test)
-                X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
-                predicted_stock_price = calculate.weightedmovingaverage(X_test, period = period)
-                total_inputs.append(predicted_stock_price[0])
-                total_predict_list.append(predicted_stock_price[0])
-        elif predicted_span == 6:
-            calculate = cal_Tool()
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).month
-            #取6個月前的資料當訓練集
-            df = df[df.index < '{}-{}-01'.format(new_yyyy,new_mm)]
-            df1 = pd.DataFrame(calculate.weightedmovingaverage(df['Open'].values,period = period),index=df.index[period-1:],columns=['WMA'])
-            df['wma_short'] = df1
-            ma_fig = pd.DataFrame(df[['wma_short','Open']][-100:])
-            ma_fig.rename(columns={'wma_short':'Predicted Stock Price','Open':'Real Stock Price'},inplace = True)
-            #ma_fig =  plt.figure(figsize=(16,8))
-            #plt.plot(df[['wma_short','Open']][-100:]) 
-            #plt.title('WMA pred v.s. Actual historical data')
-            #plt.close()
-            na_num =  df['wma_short'].isna().sum()
-            BeforeFCSTScore = calculate.mean_absolute_percentage_error(df['Open'][na_num:].values, df['wma_short'][na_num:].values)
-            print('預測前計算分數 by WMA: %.2f MAPE' % (BeforeFCSTScore))
-            #這邊要把6個月累加
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).month
-            end_dt = datetime.date(yyyy,mm,1)
-            start_dt = datetime.date(new_yyyy,new_mm,1)
-            days = 0
-            weekend = [5,6]
-            for dt in calculate.daterange(start_dt, end_dt):
-                if dt.weekday() not in weekend:
-                    if dt != end_dt:
-                       days += 1
-            total_inputs = df['Open'][-period:].values.tolist()
-            predict_list = []
-            for i in range(0,days):
-                inputs = np.array(total_inputs).reshape(-1,1)
-                X_test = []
-                X_test.append(inputs[-period:,0])
-                X_test = np.array(X_test)
-                X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
-                predicted_stock_price = calculate.weightedmovingaverage(X_test, period = period)
-                total_inputs.append(predicted_stock_price[0])
-                predict_list.append(predicted_stock_price[0])
-            if len(predict_list) > len(y_real): #因為有國定假日
-                predict_list = predict_list[:len(y_real)]
-            RealScore = calculate.mean_absolute_percentage_error(y_real.values, predict_list)
-            print('預測分數 by WMA: %.2f MAPE' % (RealScore))
-            #visualization = visual()
-            #plot = visualization.Plot_Stock_Prediction(y_real.values,np.array(predict_list),self.product)
-            plot = pd.DataFrame({'Real Stock Price':y_real.values,'Predicted Stock Price': np.array(predict_list)},index = y_real.index) #20220103
-            #預測未來6個月
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).month
-            start_dt = datetime.date(yyyy,mm,1)
-            end_dt = datetime.date(new_yyyy,new_mm,1)
-            fcst_days = 0
-            weekend = [5,6]
-            for dt in calculate.daterange(start_dt, end_dt):
-                if dt.weekday() not in weekend:
-                    if dt != end_dt:
-                       fcst_days += 1
+#             days = list()
+#             weekend = [5,6]
+#             for dt in calculate.daterange(start_dt, end_dt):
+#                 if dt.weekday() not in weekend:
+#                     if dt != end_dt:
+#                        days.append(dt.strftime("%Y-%m-%d"))
+#             days = len(days)
+#             total_inputs = df['Open'][-period:].values.tolist()
+#             predict_list = []
+#             for i in range(0,days):
+#                 inputs = np.array(total_inputs).reshape(-1,1)
+#                 X_test = []
+#                 X_test.append(inputs[-period:,0])
+#                 X_test = np.array(X_test)
+#                 X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
+#                 predicted_stock_price = calculate.weightedmovingaverage(X_test, period = period)
+#                 total_inputs.append(predicted_stock_price[0])
+#                 predict_list.append(predicted_stock_price[0])
+#             if len(predict_list) > len(y_real): #因為有國定假日
+#                 predict_list = predict_list[:len(y_real)]
+#             RealScore = calculate.mean_absolute_percentage_error(y_real.values, predict_list)
+#             print('預測分數 by WMA: %.2f MAPE' % (RealScore))
+#             #visualization = visual()
+#             #plot = visualization.Plot_Stock_Prediction(y_real.values,np.array(predict_list),self.product)
+#             plot = pd.DataFrame({'Real Stock Price':y_real.values,'Predicted Stock Price': np.array(predict_list)},index = y_real.index) #20220103
+#             #預測未來三個月
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).month
+#             start_dt = datetime.date(yyyy,mm,1)
+#             end_dt = datetime.date(new_yyyy,new_mm,1)
+#             fcst_days = 0
+#             weekend = [5,6]
+#             for dt in calculate.daterange(start_dt, end_dt):
+#                 if dt.weekday() not in weekend:
+#                     if dt != end_dt:
+#                        fcst_days += 1
+#             total_inputs = y_real[-period:].values.tolist()
+#             total_predict_list = []
+#             for i in range(0,fcst_days):
+#                 inputs = np.array(total_inputs).reshape(-1,1)
+#                 X_test = []
+#                 X_test.append(inputs[-period:,0])
+#                 X_test = np.array(X_test)
+#                 X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
+#                 predicted_stock_price = calculate.weightedmovingaverage(X_test, period = period)
+#                 total_inputs.append(predicted_stock_price[0])
+#                 total_predict_list.append(predicted_stock_price[0])
+#         elif predicted_span == 6:
+#             calculate = cal_Tool()
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).month
+#             #取6個月前的資料當訓練集
+#             df = df[df.index < '{}-{}-01'.format(new_yyyy,new_mm)]
+#             df1 = pd.DataFrame(calculate.weightedmovingaverage(df['Open'].values,period = period),index=df.index[period-1:],columns=['WMA'])
+#             df['wma_short'] = df1
+#             ma_fig = pd.DataFrame(df[['wma_short','Open']][-100:])
+#             ma_fig.rename(columns={'wma_short':'Predicted Stock Price','Open':'Real Stock Price'},inplace = True)
+#             #ma_fig =  plt.figure(figsize=(16,8))
+#             #plt.plot(df[['wma_short','Open']][-100:]) 
+#             #plt.title('WMA pred v.s. Actual historical data')
+#             #plt.close()
+#             na_num =  df['wma_short'].isna().sum()
+#             BeforeFCSTScore = calculate.mean_absolute_percentage_error(df['Open'][na_num:].values, df['wma_short'][na_num:].values)
+#             print('預測前計算分數 by WMA: %.2f MAPE' % (BeforeFCSTScore))
+#             #這邊要把6個月累加
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).month
+#             end_dt = datetime.date(yyyy,mm,1)
+#             start_dt = datetime.date(new_yyyy,new_mm,1)
+#             days = 0
+#             weekend = [5,6]
+#             for dt in calculate.daterange(start_dt, end_dt):
+#                 if dt.weekday() not in weekend:
+#                     if dt != end_dt:
+#                        days += 1
+#             total_inputs = df['Open'][-period:].values.tolist()
+#             predict_list = []
+#             for i in range(0,days):
+#                 inputs = np.array(total_inputs).reshape(-1,1)
+#                 X_test = []
+#                 X_test.append(inputs[-period:,0])
+#                 X_test = np.array(X_test)
+#                 X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
+#                 predicted_stock_price = calculate.weightedmovingaverage(X_test, period = period)
+#                 total_inputs.append(predicted_stock_price[0])
+#                 predict_list.append(predicted_stock_price[0])
+#             if len(predict_list) > len(y_real): #因為有國定假日
+#                 predict_list = predict_list[:len(y_real)]
+#             RealScore = calculate.mean_absolute_percentage_error(y_real.values, predict_list)
+#             print('預測分數 by WMA: %.2f MAPE' % (RealScore))
+#             #visualization = visual()
+#             #plot = visualization.Plot_Stock_Prediction(y_real.values,np.array(predict_list),self.product)
+#             plot = pd.DataFrame({'Real Stock Price':y_real.values,'Predicted Stock Price': np.array(predict_list)},index = y_real.index) #20220103
+#             #預測未來6個月
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).month
+#             start_dt = datetime.date(yyyy,mm,1)
+#             end_dt = datetime.date(new_yyyy,new_mm,1)
+#             fcst_days = 0
+#             weekend = [5,6]
+#             for dt in calculate.daterange(start_dt, end_dt):
+#                 if dt.weekday() not in weekend:
+#                     if dt != end_dt:
+#                        fcst_days += 1
  
-            total_inputs = y_real[-period:].values.tolist()
-            total_predict_list = []
-            for i in range(0,fcst_days):
-                inputs = np.array(total_inputs).reshape(-1,1)
-                X_test = []
-                X_test.append(inputs[-period:,0])
-                X_test = np.array(X_test)
-                X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
-                predicted_stock_price = calculate.weightedmovingaverage(X_test, period = period)
-                total_inputs.append(predicted_stock_price[0])
-                total_predict_list.append(predicted_stock_price[0])
-        return total_predict_list, RealScore,ma_fig,plot
+#             total_inputs = y_real[-period:].values.tolist()
+#             total_predict_list = []
+#             for i in range(0,fcst_days):
+#                 inputs = np.array(total_inputs).reshape(-1,1)
+#                 X_test = []
+#                 X_test.append(inputs[-period:,0])
+#                 X_test = np.array(X_test)
+#                 X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))    
+#                 predicted_stock_price = calculate.weightedmovingaverage(X_test, period = period)
+#                 total_inputs.append(predicted_stock_price[0])
+#                 total_predict_list.append(predicted_stock_price[0])
+#         return total_predict_list, RealScore,ma_fig,plot
         
-    def Light_gbm(self,X_train,y_train,X_test,y_test,X_real,sc):
-        lgb_train = lgb.Dataset(X_train, label= y_train)
-        lgb_eval = lgb.Dataset(X_test, label=y_test)
-        #調整max_depth & num_leaves
-        estimator = lgb.LGBMRegressor(boosting_type = 'gbdt',
-                              objective = 'regression',
-                              seed = 100,
-                              n_jobs = -1,
-                              verbose = -1,
-                              metric = 'mape',
-                              max_depth = 6,
-                              num_leaves = 40,
-                              learning_rate = 0.1,
-                              feature_fraction = 0.7,
-                              bagging_fraction = 1,
-                              bagging_freq = 2,
-                              reg_alpha = 0.001,
-                              reg_lambda = 8,
-                              cat_smooth = 0,
-                              num_iterations = 200
-                             )
-        params = {
-                    'max_depth': [4,6,8],
-                    'num_leaves': [20,30,40],
-                 }
-        with HiddenPrints():
-            gbm = GridSearchCV(estimator,params,cv=3,verbose=-1)
-            gbm.fit(X_train,y_train)
-        best_max_depth = list(gbm.best_params_.values())[0]
-        best_num_leaves = list(gbm.best_params_.values())[1]
-        #調整feature_fraction
-        estimator = lgb.LGBMRegressor(boosting_type = 'gbdt',
-                              objective = 'regression',
-                              seed = 100,
-                              n_jobs = -1,
-                              verbose = -1,
-                              metric = 'mape',
-                              max_depth = best_max_depth,
-                              num_leaves = best_num_leaves,
-                              learning_rate = 0.1,
-                              feature_fraction = 0.7,
-                              bagging_fraction = 1,
-                              bagging_freq = 2,
-                              reg_alpha = 0.001,
-                              reg_lambda = 8,
-                              cat_smooth = 0,
-                              num_iterations = 200
-                             )
-        params = {
-                    'feature_fraction': [0.6, 0.8, 1],
-                 }
-        with HiddenPrints():
-            gbm = GridSearchCV(estimator,params,cv=3,verbose=-1)
-            gbm.fit(X_train,y_train)
-        best_feature_fraction = list(gbm.best_params_.values())[0]
-        #調整bagging_fraction & bagging_freq
-        estimator = lgb.LGBMRegressor(boosting_type = 'gbdt',
-                              objective = 'regression',
-                              seed = 100,
-                              n_jobs = -1,
-                              verbose =  -1,
-                              metric = 'mape',
-                              max_depth = best_max_depth,
-                              num_leaves = best_num_leaves,
-                              learning_rate = 0.1,
-                              feature_fraction = best_feature_fraction,
-                              bagging_fraction = 1,
-                              bagging_freq = 2,
-                              reg_alpha = 0.001,
-                              reg_lambda = 8,
-                              cat_smooth = 0,
-                              num_iterations = 200
-                             )
-        params = {
-                     'bagging_fraction': [0.8,0.9,1],
-                     'bagging_freq': [2,3,4],
-                 }
-        with HiddenPrints():
-            gbm = GridSearchCV(estimator,params,cv=3,verbose=-1)
-            gbm.fit(X_train,y_train)
-        best_bagging_fraction = list(gbm.best_params_.values())[0]
-        best_bagging_freq = list(gbm.best_params_.values())[1]  
-        #調整lambda_l1(reg_alpha)和lambda_l2(reg_lambda)
-        estimator = lgb.LGBMRegressor(boosting_type = 'gbdt',
-                              objective = 'regression',
-                              seed = 100,
-                              n_jobs = -1,
-                              verbose =  -1,
-                              metric = 'mape',
-                              max_depth = best_max_depth,
-                              num_leaves = best_num_leaves,
-                              learning_rate = 0.1,
-                              feature_fraction = best_feature_fraction,
-                              bagging_fraction = best_bagging_fraction,
-                              bagging_freq = best_bagging_freq,
-                              reg_alpha = 0.001,
-                              reg_lambda = 8,
-                              cat_smooth = 0,
-                              num_iterations = 200
-                             )
-        params = {
-                     'reg_alpha': [0.001,0.005,0.01,0.02],
-                     'reg_lambda': [2,4,6,8,10]
-                }
-        with HiddenPrints():
-            gbm = GridSearchCV(estimator,params,cv=3,verbose=-1)
-            gbm.fit(X_train,y_train)
-        best_reg_alpha = list(gbm.best_params_.values())[0]
-        best_reg_lambda = list(gbm.best_params_.values())[1]  
-        #調整cat_smooth
-        estimator = lgb.LGBMRegressor(boosting_type = 'gbdt',
-                              objective = 'regression',
-                              seed = 100,
-                              n_jobs = -1,
-                              verbose =  -1,
-                              metric = 'mape',
-                              max_depth = best_max_depth,
-                              num_leaves = best_num_leaves,
-                              learning_rate = 0.1,
-                              feature_fraction = best_feature_fraction,
-                              bagging_fraction = best_bagging_fraction,
-                              bagging_freq = best_bagging_freq,
-                              reg_alpha = best_reg_alpha,
-                              reg_lambda = best_reg_lambda,
-                              cat_smooth = 0,
-                              num_iterations = 200
-                             )        
-        params = {
-                     'cat_smooth': [0,10,20]
-                }
-        with HiddenPrints():
-            gbm = GridSearchCV(estimator,params,cv=3,verbose=-1)
-            gbm.fit(X_train,y_train)
-        best_cat_smooth = list(gbm.best_params_.values())[0]
-        #調整learning rate & num_iterations
-        estimator = lgb.LGBMRegressor(boosting_type = 'gbdt',
-                              objective = 'regression',
-                              seed = 100,
-                              n_jobs = -1,
-                              verbose =  -1,
-                              metric = 'mape',
-                              max_depth = best_max_depth,
-                              num_leaves = best_num_leaves,
-                              learning_rate = 0.1,
-                              feature_fraction = best_feature_fraction,
-                              bagging_fraction = best_bagging_fraction,
-                              bagging_freq = best_bagging_freq,
-                              reg_alpha = best_reg_alpha,
-                              reg_lambda = best_reg_lambda,
-                              cat_smooth = best_cat_smooth,
-                              num_iterations = 200
-                             )            
-        params = {
-                     'learning_rate': [0.001,0.005,0.01,0.025,0.05],
-                     'num_iterations': [100,200,500,800]
-                }
-        with HiddenPrints():
-            gbm = GridSearchCV(estimator,params,cv=3,verbose=-1)
-            gbm.fit(X_train,y_train)
-        best_learning_rate = list(gbm.best_params_.values())[0]
-        best_num_iterations = list(gbm.best_params_.values())[1]  
-        #Finish Fine-tuning
-        params = {
-              'boosting_type': 'gbdt',
-              'objective' : 'regression',
-              'seed' : 100,
-              'n_jobs' : -1,
-              'verbose' :  -1,
-              'metric' : 'mape',
-              'max_depth' : best_max_depth,
-              'num_leaves' : best_num_leaves,
-              'learning_rate' : best_learning_rate,
-              'feature_fraction' : best_feature_fraction,
-              'bagging_fraction' : best_bagging_fraction,
-              'bagging_freq' : best_bagging_freq,
-              'reg_alpha' : best_reg_alpha,
-              'reg_lambda' : best_reg_lambda,
-              'cat_smooth' : best_cat_smooth,
-              'num_iterations' : best_num_iterations,
-              }
-        gbm = lgb.train(params, lgb_train, num_boost_round=500)
-        y_pred_prob = gbm.predict(X_test, num_iteration=gbm.best_iteration).reshape(-1,1)
-        ####Test
-        y_pred_prob = sc.inverse_transform(y_pred_prob)
-        y_train = sc.inverse_transform(X_test)
-        y_test = sc.inverse_transform(y_test)
-        calculate = cal_Tool()
-        TestScore = calculate.mean_absolute_percentage_error(y_test, y_pred_prob)
-        print('Test Score by GBM: %.2f MAPE' % (TestScore))
-        #visualization = visual()
-        #test_plot = visualization.Plot_Stock_Prediction(y_test,y_pred_prob,self.product)
-        test_plot = pd.DataFrame({'Real Stock Price':y_test[:,0],'Predicted Stock Price': y_pred_prob[:,0]}) #20220103
-        #漲幅觀察&準確度
-        pred_change = y_pred_prob[:-1] - y_pred_prob[1:]
-        real_change = y_test[:-1] - y_test[1:]
-        changing_plot = pd.DataFrame({'Real Stock Price Changing':real_change[:,0],'Predicted Stock Price Changing': pred_change[:,0]}) #20220103
-        #changing_plot = plt.figure(figsize=(16,8))
-        #plt.plot(real_change, color = 'black', label = 'Real {} Stock Price Changing'.format(self.product))
-        #plt.plot(pred_change, color = 'green', label = 'Predicted {} Stock Price Changing'.format(self.product))
-        #plt.title('{} Stock Price Changing'.format(self.product))
-        #plt.xlabel('Time')
-        #plt.ylabel('Stock Price')
-        #plt.legend()
-        #plt.close()
+#     def Light_gbm(self,X_train,y_train,X_test,y_test,X_real,sc):
+#         lgb_train = lgb.Dataset(X_train, label= y_train)
+#         lgb_eval = lgb.Dataset(X_test, label=y_test)
+#         #調整max_depth & num_leaves
+#         estimator = lgb.LGBMRegressor(boosting_type = 'gbdt',
+#                               objective = 'regression',
+#                               seed = 100,
+#                               n_jobs = -1,
+#                               verbose = -1,
+#                               metric = 'mape',
+#                               max_depth = 6,
+#                               num_leaves = 40,
+#                               learning_rate = 0.1,
+#                               feature_fraction = 0.7,
+#                               bagging_fraction = 1,
+#                               bagging_freq = 2,
+#                               reg_alpha = 0.001,
+#                               reg_lambda = 8,
+#                               cat_smooth = 0,
+#                               num_iterations = 200
+#                              )
+#         params = {
+#                     'max_depth': [4,6,8],
+#                     'num_leaves': [20,30,40],
+#                  }
+#         with HiddenPrints():
+#             gbm = GridSearchCV(estimator,params,cv=3,verbose=-1)
+#             gbm.fit(X_train,y_train)
+#         best_max_depth = list(gbm.best_params_.values())[0]
+#         best_num_leaves = list(gbm.best_params_.values())[1]
+#         #調整feature_fraction
+#         estimator = lgb.LGBMRegressor(boosting_type = 'gbdt',
+#                               objective = 'regression',
+#                               seed = 100,
+#                               n_jobs = -1,
+#                               verbose = -1,
+#                               metric = 'mape',
+#                               max_depth = best_max_depth,
+#                               num_leaves = best_num_leaves,
+#                               learning_rate = 0.1,
+#                               feature_fraction = 0.7,
+#                               bagging_fraction = 1,
+#                               bagging_freq = 2,
+#                               reg_alpha = 0.001,
+#                               reg_lambda = 8,
+#                               cat_smooth = 0,
+#                               num_iterations = 200
+#                              )
+#         params = {
+#                     'feature_fraction': [0.6, 0.8, 1],
+#                  }
+#         with HiddenPrints():
+#             gbm = GridSearchCV(estimator,params,cv=3,verbose=-1)
+#             gbm.fit(X_train,y_train)
+#         best_feature_fraction = list(gbm.best_params_.values())[0]
+#         #調整bagging_fraction & bagging_freq
+#         estimator = lgb.LGBMRegressor(boosting_type = 'gbdt',
+#                               objective = 'regression',
+#                               seed = 100,
+#                               n_jobs = -1,
+#                               verbose =  -1,
+#                               metric = 'mape',
+#                               max_depth = best_max_depth,
+#                               num_leaves = best_num_leaves,
+#                               learning_rate = 0.1,
+#                               feature_fraction = best_feature_fraction,
+#                               bagging_fraction = 1,
+#                               bagging_freq = 2,
+#                               reg_alpha = 0.001,
+#                               reg_lambda = 8,
+#                               cat_smooth = 0,
+#                               num_iterations = 200
+#                              )
+#         params = {
+#                      'bagging_fraction': [0.8,0.9,1],
+#                      'bagging_freq': [2,3,4],
+#                  }
+#         with HiddenPrints():
+#             gbm = GridSearchCV(estimator,params,cv=3,verbose=-1)
+#             gbm.fit(X_train,y_train)
+#         best_bagging_fraction = list(gbm.best_params_.values())[0]
+#         best_bagging_freq = list(gbm.best_params_.values())[1]  
+#         #調整lambda_l1(reg_alpha)和lambda_l2(reg_lambda)
+#         estimator = lgb.LGBMRegressor(boosting_type = 'gbdt',
+#                               objective = 'regression',
+#                               seed = 100,
+#                               n_jobs = -1,
+#                               verbose =  -1,
+#                               metric = 'mape',
+#                               max_depth = best_max_depth,
+#                               num_leaves = best_num_leaves,
+#                               learning_rate = 0.1,
+#                               feature_fraction = best_feature_fraction,
+#                               bagging_fraction = best_bagging_fraction,
+#                               bagging_freq = best_bagging_freq,
+#                               reg_alpha = 0.001,
+#                               reg_lambda = 8,
+#                               cat_smooth = 0,
+#                               num_iterations = 200
+#                              )
+#         params = {
+#                      'reg_alpha': [0.001,0.005,0.01,0.02],
+#                      'reg_lambda': [2,4,6,8,10]
+#                 }
+#         with HiddenPrints():
+#             gbm = GridSearchCV(estimator,params,cv=3,verbose=-1)
+#             gbm.fit(X_train,y_train)
+#         best_reg_alpha = list(gbm.best_params_.values())[0]
+#         best_reg_lambda = list(gbm.best_params_.values())[1]  
+#         #調整cat_smooth
+#         estimator = lgb.LGBMRegressor(boosting_type = 'gbdt',
+#                               objective = 'regression',
+#                               seed = 100,
+#                               n_jobs = -1,
+#                               verbose =  -1,
+#                               metric = 'mape',
+#                               max_depth = best_max_depth,
+#                               num_leaves = best_num_leaves,
+#                               learning_rate = 0.1,
+#                               feature_fraction = best_feature_fraction,
+#                               bagging_fraction = best_bagging_fraction,
+#                               bagging_freq = best_bagging_freq,
+#                               reg_alpha = best_reg_alpha,
+#                               reg_lambda = best_reg_lambda,
+#                               cat_smooth = 0,
+#                               num_iterations = 200
+#                              )        
+#         params = {
+#                      'cat_smooth': [0,10,20]
+#                 }
+#         with HiddenPrints():
+#             gbm = GridSearchCV(estimator,params,cv=3,verbose=-1)
+#             gbm.fit(X_train,y_train)
+#         best_cat_smooth = list(gbm.best_params_.values())[0]
+#         #調整learning rate & num_iterations
+#         estimator = lgb.LGBMRegressor(boosting_type = 'gbdt',
+#                               objective = 'regression',
+#                               seed = 100,
+#                               n_jobs = -1,
+#                               verbose =  -1,
+#                               metric = 'mape',
+#                               max_depth = best_max_depth,
+#                               num_leaves = best_num_leaves,
+#                               learning_rate = 0.1,
+#                               feature_fraction = best_feature_fraction,
+#                               bagging_fraction = best_bagging_fraction,
+#                               bagging_freq = best_bagging_freq,
+#                               reg_alpha = best_reg_alpha,
+#                               reg_lambda = best_reg_lambda,
+#                               cat_smooth = best_cat_smooth,
+#                               num_iterations = 200
+#                              )            
+#         params = {
+#                      'learning_rate': [0.001,0.005,0.01,0.025,0.05],
+#                      'num_iterations': [100,200,500,800]
+#                 }
+#         with HiddenPrints():
+#             gbm = GridSearchCV(estimator,params,cv=3,verbose=-1)
+#             gbm.fit(X_train,y_train)
+#         best_learning_rate = list(gbm.best_params_.values())[0]
+#         best_num_iterations = list(gbm.best_params_.values())[1]  
+#         #Finish Fine-tuning
+#         params = {
+#               'boosting_type': 'gbdt',
+#               'objective' : 'regression',
+#               'seed' : 100,
+#               'n_jobs' : -1,
+#               'verbose' :  -1,
+#               'metric' : 'mape',
+#               'max_depth' : best_max_depth,
+#               'num_leaves' : best_num_leaves,
+#               'learning_rate' : best_learning_rate,
+#               'feature_fraction' : best_feature_fraction,
+#               'bagging_fraction' : best_bagging_fraction,
+#               'bagging_freq' : best_bagging_freq,
+#               'reg_alpha' : best_reg_alpha,
+#               'reg_lambda' : best_reg_lambda,
+#               'cat_smooth' : best_cat_smooth,
+#               'num_iterations' : best_num_iterations,
+#               }
+#         gbm = lgb.train(params, lgb_train, num_boost_round=500)
+#         y_pred_prob = gbm.predict(X_test, num_iteration=gbm.best_iteration).reshape(-1,1)
+#         ####Test
+#         y_pred_prob = sc.inverse_transform(y_pred_prob)
+#         y_train = sc.inverse_transform(X_test)
+#         y_test = sc.inverse_transform(y_test)
+#         calculate = cal_Tool()
+#         TestScore = calculate.mean_absolute_percentage_error(y_test, y_pred_prob)
+#         print('Test Score by GBM: %.2f MAPE' % (TestScore))
+#         #visualization = visual()
+#         #test_plot = visualization.Plot_Stock_Prediction(y_test,y_pred_prob,self.product)
+#         test_plot = pd.DataFrame({'Real Stock Price':y_test[:,0],'Predicted Stock Price': y_pred_prob[:,0]}) #20220103
+#         #漲幅觀察&準確度
+#         pred_change = y_pred_prob[:-1] - y_pred_prob[1:]
+#         real_change = y_test[:-1] - y_test[1:]
+#         changing_plot = pd.DataFrame({'Real Stock Price Changing':real_change[:,0],'Predicted Stock Price Changing': pred_change[:,0]}) #20220103
+#         #changing_plot = plt.figure(figsize=(16,8))
+#         #plt.plot(real_change, color = 'black', label = 'Real {} Stock Price Changing'.format(self.product))
+#         #plt.plot(pred_change, color = 'green', label = 'Predicted {} Stock Price Changing'.format(self.product))
+#         #plt.title('{} Stock Price Changing'.format(self.product))
+#         #plt.xlabel('Time')
+#         #plt.ylabel('Stock Price')
+#         #plt.legend()
+#         #plt.close()
         
-        pred_change_trends = []
-        real_change_trends = []
-        for i in range(0,len(real_change)):
-            if pred_change[i] < 0:
-               pred_change_trend = -1
-               pred_change_trends.append(pred_change_trend)
-            else :
-               pred_change_trend = 1
-               pred_change_trends.append(pred_change_trend)       
-            if real_change[i] < 0:
-               real_change_trend = -1
-               real_change_trends.append(real_change_trend)
-            else :
-               real_change_trend = 1
-               real_change_trends.append(real_change_trend)         
-        acc = (np.array(real_change_trends) - np.array(pred_change_trends)).tolist().count(0)/len(real_change_trends)
-        print('漲幅預測準確度 by GBM為:{}'.format(acc))
-        #輸出目標月預測
-        y_real_prob = gbm.predict(X_real, num_iteration=gbm.best_iteration, predict_disable_shape_check=True).reshape(-1, 1)
-        y_real_prob = sc.inverse_transform(y_real_prob)
-        #plt.figure(figsize=(14,7))
-        #plt.rcParams["figure.figsize"] = (14, 7)
-        #importance_plot = lgb.plot_importance(gbm,max_num_features = 50)
-        #plt.close()
-        importance_plot = pd.DataFrame({'importance':gbm.feature_importance()},index = X_train.columns)
-        return y_real_prob, acc, TestScore, test_plot,changing_plot,importance_plot
+#         pred_change_trends = []
+#         real_change_trends = []
+#         for i in range(0,len(real_change)):
+#             if pred_change[i] < 0:
+#                pred_change_trend = -1
+#                pred_change_trends.append(pred_change_trend)
+#             else :
+#                pred_change_trend = 1
+#                pred_change_trends.append(pred_change_trend)       
+#             if real_change[i] < 0:
+#                real_change_trend = -1
+#                real_change_trends.append(real_change_trend)
+#             else :
+#                real_change_trend = 1
+#                real_change_trends.append(real_change_trend)         
+#         acc = (np.array(real_change_trends) - np.array(pred_change_trends)).tolist().count(0)/len(real_change_trends)
+#         print('漲幅預測準確度 by GBM為:{}'.format(acc))
+#         #輸出目標月預測
+#         y_real_prob = gbm.predict(X_real, num_iteration=gbm.best_iteration, predict_disable_shape_check=True).reshape(-1, 1)
+#         y_real_prob = sc.inverse_transform(y_real_prob)
+#         #plt.figure(figsize=(14,7))
+#         #plt.rcParams["figure.figsize"] = (14, 7)
+#         #importance_plot = lgb.plot_importance(gbm,max_num_features = 50)
+#         #plt.close()
+#         importance_plot = pd.DataFrame({'importance':gbm.feature_importance()},index = X_train.columns)
+#         return y_real_prob, acc, TestScore, test_plot,changing_plot,importance_plot
     
-    def ARIMA(self,df,yyyy,mm,predicted_span):
-        visualization = visual()
-        trend_plot = visualization.Open_Price_Trend(df,self.product)
-        ets_plot_a,ets_plot_b,ets_plot_c,ets_plot_d = visualization.ETS_Decomposition(df,self.product)
-        calculate = cal_Tool()
-        with HiddenPrints():
-            test_signal = calculate.adf_test(df['Open'])
-            if test_signal == True:
-                print('數據在0階差分未平穩')
-                diff_1 = df['Open']- df['Open'].shift(1) 
-                diff_1 = diff_1.dropna()
-                diff_1.head()
-                #diff_1.plot(figsize=(6,4), label="diff_1")
-                #plt.legend()
-                test_signal = calculate.adf_test(diff_1)
-                best_d = 1
-                if test_signal == True:
-                    best_d = 2
-            else:
-                best_d = 0
+#     def ARIMA(self,df,yyyy,mm,predicted_span):
+#         visualization = visual()
+#         trend_plot = visualization.Open_Price_Trend(df,self.product)
+#         ets_plot_a,ets_plot_b,ets_plot_c,ets_plot_d = visualization.ETS_Decomposition(df,self.product)
+#         calculate = cal_Tool()
+#         with HiddenPrints():
+#             test_signal = calculate.adf_test(df['Open'])
+#             if test_signal == True:
+#                 print('數據在0階差分未平穩')
+#                 diff_1 = df['Open']- df['Open'].shift(1) 
+#                 diff_1 = diff_1.dropna()
+#                 diff_1.head()
+#                 #diff_1.plot(figsize=(6,4), label="diff_1")
+#                 #plt.legend()
+#                 test_signal = calculate.adf_test(diff_1)
+#                 best_d = 1
+#                 if test_signal == True:
+#                     best_d = 2
+#             else:
+#                 best_d = 0
         
-        acf_plot = visualization.ACF_PACF(df)
-        with HiddenPrints():
-            best_p,best_q = calculate.arima_rmse(df['Open'], p=5, d=best_d, q=5 ,period=30)
-        if predicted_span == 1:
-            if mm == 1:
-                target_days = calculate.month_weekdays(yyyy,mm)
-                days = len(df.loc[(df.index >= '{}-{}-01'.format(yyyy-1,12))&(df.index < '{}-{}-01'.format(yyyy,mm))])
-            else:
-                target_days = calculate.month_weekdays(yyyy,mm)
-                days = len(df.loc[(df.index >= '{}-{}-01'.format(yyyy,mm-1))&(df.index < '{}-{}-01'.format(yyyy,mm))])
-        elif predicted_span == 3:
-            #for 預測筆數
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).month
-            start_dt = datetime.date(yyyy,mm,1)
-            end_dt = datetime.date(new_yyyy,new_mm,1)
-            target_days = 0
-            weekend = [5,6]
-            for dt in calculate.daterange(start_dt, end_dt):
-                if dt.weekday() not in weekend:
-                    if dt != end_dt:
-                       target_days += 1
-            #for 訓練集        
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).month
-            end_dt = datetime.date(yyyy,mm,1)
-            start_dt = datetime.date(new_yyyy,new_mm,1)
-            days = len(df.loc[(df.index > '{}-{}-01'.format(new_yyyy,new_mm))&(df.index < '{}-{}-01'.format(yyyy,mm))])  
-        elif predicted_span == 6:
-            #for 預測筆數
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).month
-            start_dt = datetime.date(yyyy,mm,1)
-            end_dt = datetime.date(new_yyyy,new_mm,1)
-            target_days = 0
-            weekend = [5,6]
-            for dt in calculate.daterange(start_dt, end_dt):
-                if dt.weekday() not in weekend:
-                    if dt != end_dt:
-                       target_days += 1
-            #for 訓練集        
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).month
-            end_dt = datetime.date(yyyy,mm,1)
-            start_dt = datetime.date(new_yyyy,new_mm,1)
-            days = len(df.loc[(df.index > '{}-{}-01'.format(new_yyyy,new_mm))&(df.index < '{}-{}-01'.format(yyyy,mm))])       
+#         acf_plot = visualization.ACF_PACF(df)
+#         with HiddenPrints():
+#             best_p,best_q = calculate.arima_rmse(df['Open'], p=5, d=best_d, q=5 ,period=30)
+#         if predicted_span == 1:
+#             if mm == 1:
+#                 target_days = calculate.month_weekdays(yyyy,mm)
+#                 days = len(df.loc[(df.index >= '{}-{}-01'.format(yyyy-1,12))&(df.index < '{}-{}-01'.format(yyyy,mm))])
+#             else:
+#                 target_days = calculate.month_weekdays(yyyy,mm)
+#                 days = len(df.loc[(df.index >= '{}-{}-01'.format(yyyy,mm-1))&(df.index < '{}-{}-01'.format(yyyy,mm))])
+#         elif predicted_span == 3:
+#             #for 預測筆數
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).month
+#             start_dt = datetime.date(yyyy,mm,1)
+#             end_dt = datetime.date(new_yyyy,new_mm,1)
+#             target_days = 0
+#             weekend = [5,6]
+#             for dt in calculate.daterange(start_dt, end_dt):
+#                 if dt.weekday() not in weekend:
+#                     if dt != end_dt:
+#                        target_days += 1
+#             #for 訓練集        
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).month
+#             end_dt = datetime.date(yyyy,mm,1)
+#             start_dt = datetime.date(new_yyyy,new_mm,1)
+#             days = len(df.loc[(df.index > '{}-{}-01'.format(new_yyyy,new_mm))&(df.index < '{}-{}-01'.format(yyyy,mm))])  
+#         elif predicted_span == 6:
+#             #for 預測筆數
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).month
+#             start_dt = datetime.date(yyyy,mm,1)
+#             end_dt = datetime.date(new_yyyy,new_mm,1)
+#             target_days = 0
+#             weekend = [5,6]
+#             for dt in calculate.daterange(start_dt, end_dt):
+#                 if dt.weekday() not in weekend:
+#                     if dt != end_dt:
+#                        target_days += 1
+#             #for 訓練集        
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).month
+#             end_dt = datetime.date(yyyy,mm,1)
+#             start_dt = datetime.date(new_yyyy,new_mm,1)
+#             days = len(df.loc[(df.index > '{}-{}-01'.format(new_yyyy,new_mm))&(df.index < '{}-{}-01'.format(yyyy,mm))])       
         
-        title = f'ARIMA({best_p},{best_d},{best_q}) for Forecasting {days} days'
-        L = len(df['Open'])
-        x_train = df['Open'][:(L-days)]
-        x_test = df['Open'][-days:]
-        try:
-           model = ARIMA(x_train, order=(best_p, best_d, best_q)) 
-           fitted = model.fit(disp=-1,transparams=False)
-        except (ValueError, LinAlgError): 
-           pass
-        fc, se, conf = fitted.forecast(days, alpha=0.05) # 95% conf
-        fc_series = pd.Series(fc, index=x_test.index)
-        lower_series = pd.Series(conf[:, 0], index=x_test.index)
-        upper_series = pd.Series(conf[:, 1], index=x_test.index)
+#         title = f'ARIMA({best_p},{best_d},{best_q}) for Forecasting {days} days'
+#         L = len(df['Open'])
+#         x_train = df['Open'][:(L-days)]
+#         x_test = df['Open'][-days:]
+#         try:
+#            model = ARIMA(x_train, order=(best_p, best_d, best_q)) 
+#            fitted = model.fit(disp=-1,transparams=False)
+#         except (ValueError, LinAlgError): 
+#            pass
+#         fc, se, conf = fitted.forecast(days, alpha=0.05) # 95% conf
+#         fc_series = pd.Series(fc, index=x_test.index)
+#         lower_series = pd.Series(conf[:, 0], index=x_test.index)
+#         upper_series = pd.Series(conf[:, 1], index=x_test.index)
         
-        TestScore = calculate.mean_absolute_percentage_error(x_test, fc_series)
-        print('Test Score by ARIMA: %.2f MAPE' % (TestScore))
-        #visualization = visual()
-        #test_plot = visualization.Plot_Stock_Prediction(x_test,fc_series,self.product)
-        test_plot = pd.DataFrame({'Real Stock Price':x_test,'Predicted Stock Price': fc_series})
-        #實際預測
-        model = ARIMA(df['Open'], order=(best_p, best_d, best_q)) 
-        fitted = model.fit(disp=-1)
-        fc, se, conf = fitted.forecast(target_days, alpha=0.05) # 95% conf
-        fc_series = pd.Series(fc)
-        return fc_series, TestScore,trend_plot,ets_plot_a,ets_plot_b,ets_plot_c,ets_plot_d,acf_plot,test_plot
+#         TestScore = calculate.mean_absolute_percentage_error(x_test, fc_series)
+#         print('Test Score by ARIMA: %.2f MAPE' % (TestScore))
+#         #visualization = visual()
+#         #test_plot = visualization.Plot_Stock_Prediction(x_test,fc_series,self.product)
+#         test_plot = pd.DataFrame({'Real Stock Price':x_test,'Predicted Stock Price': fc_series})
+#         #實際預測
+#         model = ARIMA(df['Open'], order=(best_p, best_d, best_q)) 
+#         fitted = model.fit(disp=-1)
+#         fc, se, conf = fitted.forecast(target_days, alpha=0.05) # 95% conf
+#         fc_series = pd.Series(fc)
+#         return fc_series, TestScore,trend_plot,ets_plot_a,ets_plot_b,ets_plot_c,ets_plot_d,acf_plot,test_plot
     
-    def SARIMA(self,df,yyyy,mm,predicted_span):
-        calculate = cal_Tool()
-        if predicted_span == 1:
-            if mm == 1:
-                target_days = calculate.month_weekdays(yyyy,mm)
-                days = len(df.loc[(df.index >= '{}-{}-01'.format(yyyy-1,12))&(df.index < '{}-{}-01'.format(yyyy,mm))])
-            else:
-                target_days = calculate.month_weekdays(yyyy,mm)
-                days = len(df.loc[(df.index >= '{}-{}-01'.format(yyyy,mm-1))&(df.index < '{}-{}-01'.format(yyyy,mm))])
-        elif predicted_span == 3:
-            #for 預測筆數
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).month
-            start_dt = datetime.date(yyyy,mm,1)
-            end_dt = datetime.date(new_yyyy,new_mm,1)
-            target_days = 0
-            weekend = [5,6]
-            for dt in calculate.daterange(start_dt, end_dt):
-                if dt.weekday() not in weekend:
-                    if dt != end_dt:
-                       target_days += 1
-            #for 訓練集        
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).month
-            end_dt = datetime.date(yyyy,mm,1)
-            start_dt = datetime.date(new_yyyy,new_mm,1)
-            days = len(df.loc[(df.index > '{}-{}-01'.format(new_yyyy,new_mm))&(df.index < '{}-{}-01'.format(yyyy,mm))])  
-        elif predicted_span == 6:
-            #for 預測筆數
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).month
-            start_dt = datetime.date(yyyy,mm,1)
-            end_dt = datetime.date(new_yyyy,new_mm,1)
-            target_days = 0
-            weekend = [5,6]
-            for dt in calculate.daterange(start_dt, end_dt):
-                if dt.weekday() not in weekend:
-                    if dt != end_dt:
-                       target_days += 1
-            #for 訓練集        
-            new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).year
-            new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).month
-            end_dt = datetime.date(yyyy,mm,1)
-            start_dt = datetime.date(new_yyyy,new_mm,1)
-            days = len(df.loc[(df.index > '{}-{}-01'.format(new_yyyy,new_mm))&(df.index < '{}-{}-01'.format(yyyy,mm))])  
-        with HiddenPrints():
-            smodel = pm.auto_arima(df['Open'][:-days],
-                           start_p=1, 
-                           start_q=1,
-                           test='adf', #如果stationary為假且d為None，用來檢測平穩性的單位根檢驗的類型。默認為‘kpss’;可設置為adf
-                           max_p=3, 
-                           max_q=3, 
-                           m=12, #frequency of series
-                           start_P=0, #The starting value of P, the order of the auto-regressive portion of the seasonal model. 
-                           seasonal=True, #加入季節性因素進去，為SARIMA的S
-                           d=None, #The order of first-differencing. If None (by default), the value will automatically be selected based on the result
-                           D=1,#The order of the seasonal differencing. If None (by default, the value will automatically be selected based on the results
-                           trace=True, #是否打印適合的狀態。如果值為False，則不會打印任何調試信息。值為真會打印一些
-                           error_action='ignore', #If unable to fit an ARIMA for whatever reason, this controls the error-handling behavior. 
-                           suppress_warnings=True, #statsmodel中可能會拋出許多警告。如果suppress_warnings為真，那麽來自ARIMA的所有警告都將被壓制
-                           stepwise=True
-                          )
-            smodel.summary()
-        title = f'Best SARIMA for Forecasting {days} days'
-        L = len(df)
-        x_train = df['Open'][:(L-days)]
-        x_test = df['Open'][-days:]
-        #Forecast
-        fc, conf = smodel.predict(n_periods=days,alpha=0.05, return_conf_int=True)
-        index_of_fc = np.arange(len(df), len(df)+days)
-        #Make as pandas series
-        fc_series = pd.Series(fc, index=x_test.index)
-        lower_series = pd.Series(conf[:, 0], index=x_test.index)
-        upper_series = pd.Series(conf[:, 1], index=x_test.index)
-        calculate = cal_Tool()
-        TestScore = calculate.mean_absolute_percentage_error(x_test, fc_series)
-        print('Test Score by SARIMA: %.2f MAPE' % (TestScore))
-        #visualization = visual()
-        #test_plot = visualization.Plot_Stock_Prediction(x_test,fc_series,self.product)
-        test_plot = pd.DataFrame({'Real Stock Price':x_test,'Predicted Stock Price': fc_series})
-        #實際預測
-        fc, conf = smodel.predict(target_days, alpha=0.05,return_conf_int=True) # 95% conf
-        fc_series = pd.Series(fc)
-        return fc_series, TestScore,test_plot
+#     def SARIMA(self,df,yyyy,mm,predicted_span):
+#         calculate = cal_Tool()
+#         if predicted_span == 1:
+#             if mm == 1:
+#                 target_days = calculate.month_weekdays(yyyy,mm)
+#                 days = len(df.loc[(df.index >= '{}-{}-01'.format(yyyy-1,12))&(df.index < '{}-{}-01'.format(yyyy,mm))])
+#             else:
+#                 target_days = calculate.month_weekdays(yyyy,mm)
+#                 days = len(df.loc[(df.index >= '{}-{}-01'.format(yyyy,mm-1))&(df.index < '{}-{}-01'.format(yyyy,mm))])
+#         elif predicted_span == 3:
+#             #for 預測筆數
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=+3)).month
+#             start_dt = datetime.date(yyyy,mm,1)
+#             end_dt = datetime.date(new_yyyy,new_mm,1)
+#             target_days = 0
+#             weekend = [5,6]
+#             for dt in calculate.daterange(start_dt, end_dt):
+#                 if dt.weekday() not in weekend:
+#                     if dt != end_dt:
+#                        target_days += 1
+#             #for 訓練集        
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-3)).month
+#             end_dt = datetime.date(yyyy,mm,1)
+#             start_dt = datetime.date(new_yyyy,new_mm,1)
+#             days = len(df.loc[(df.index > '{}-{}-01'.format(new_yyyy,new_mm))&(df.index < '{}-{}-01'.format(yyyy,mm))])  
+#         elif predicted_span == 6:
+#             #for 預測筆數
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=+6)).month
+#             start_dt = datetime.date(yyyy,mm,1)
+#             end_dt = datetime.date(new_yyyy,new_mm,1)
+#             target_days = 0
+#             weekend = [5,6]
+#             for dt in calculate.daterange(start_dt, end_dt):
+#                 if dt.weekday() not in weekend:
+#                     if dt != end_dt:
+#                        target_days += 1
+#             #for 訓練集        
+#             new_yyyy = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).year
+#             new_mm = (datetime.date(yyyy,mm,1) + relativedelta(months=-6)).month
+#             end_dt = datetime.date(yyyy,mm,1)
+#             start_dt = datetime.date(new_yyyy,new_mm,1)
+#             days = len(df.loc[(df.index > '{}-{}-01'.format(new_yyyy,new_mm))&(df.index < '{}-{}-01'.format(yyyy,mm))])  
+#         with HiddenPrints():
+#             smodel = pm.auto_arima(df['Open'][:-days],
+#                            start_p=1, 
+#                            start_q=1,
+#                            test='adf', #如果stationary為假且d為None，用來檢測平穩性的單位根檢驗的類型。默認為‘kpss’;可設置為adf
+#                            max_p=3, 
+#                            max_q=3, 
+#                            m=12, #frequency of series
+#                            start_P=0, #The starting value of P, the order of the auto-regressive portion of the seasonal model. 
+#                            seasonal=True, #加入季節性因素進去，為SARIMA的S
+#                            d=None, #The order of first-differencing. If None (by default), the value will automatically be selected based on the result
+#                            D=1,#The order of the seasonal differencing. If None (by default, the value will automatically be selected based on the results
+#                            trace=True, #是否打印適合的狀態。如果值為False，則不會打印任何調試信息。值為真會打印一些
+#                            error_action='ignore', #If unable to fit an ARIMA for whatever reason, this controls the error-handling behavior. 
+#                            suppress_warnings=True, #statsmodel中可能會拋出許多警告。如果suppress_warnings為真，那麽來自ARIMA的所有警告都將被壓制
+#                            stepwise=True
+#                           )
+#             smodel.summary()
+#         title = f'Best SARIMA for Forecasting {days} days'
+#         L = len(df)
+#         x_train = df['Open'][:(L-days)]
+#         x_test = df['Open'][-days:]
+#         #Forecast
+#         fc, conf = smodel.predict(n_periods=days,alpha=0.05, return_conf_int=True)
+#         index_of_fc = np.arange(len(df), len(df)+days)
+#         #Make as pandas series
+#         fc_series = pd.Series(fc, index=x_test.index)
+#         lower_series = pd.Series(conf[:, 0], index=x_test.index)
+#         upper_series = pd.Series(conf[:, 1], index=x_test.index)
+#         calculate = cal_Tool()
+#         TestScore = calculate.mean_absolute_percentage_error(x_test, fc_series)
+#         print('Test Score by SARIMA: %.2f MAPE' % (TestScore))
+#         #visualization = visual()
+#         #test_plot = visualization.Plot_Stock_Prediction(x_test,fc_series,self.product)
+#         test_plot = pd.DataFrame({'Real Stock Price':x_test,'Predicted Stock Price': fc_series})
+#         #實際預測
+#         fc, conf = smodel.predict(target_days, alpha=0.05,return_conf_int=True) # 95% conf
+#         fc_series = pd.Series(fc)
+#         return fc_series, TestScore,test_plot
 
 if __name__ == "__main__":
     warnings.filterwarnings('ignore')
