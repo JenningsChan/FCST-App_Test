@@ -3,7 +3,6 @@ investpy==1.0.8
 keras==2.6.0
 lightgbm==3.2.1
 matplotlib==3.3.4
-numpy==1.21.5
 openpyxl==3.0.7
 pandas==1.2.4
 Pillow==9.0.1
