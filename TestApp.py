@@ -7,10 +7,10 @@ import streamlit as st
 from PIL import Image
 import sys
 sys.path.append("./Tools")
-from Trend_Analysis3 import Data, cal_Tool
+from Trend_Analysis2 import Data, cal_Tool
 import pandas as pd
 import yfinance as yf
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import numpy as np
 import datetime
 from io import BytesIO
