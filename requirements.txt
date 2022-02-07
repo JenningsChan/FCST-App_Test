@@ -5,7 +5,6 @@ openpyxl==3.0.7
 pandas==1.2.4
 Pillow==9.0.1
 plotly==5.4.0
-pmdarima==1.8.4
 python_dateutil==2.8.2
 pyxlsb==1.0.9
 requests==2.25.1
