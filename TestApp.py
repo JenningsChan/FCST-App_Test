@@ -116,11 +116,18 @@ if st.sidebar.button('Confirm'):
                                                     from_date = '01/01/2010', 
                                                     to_date = datetime.datetime(yyyy, mm, calendar.monthrange(yyyy, mm)[1]).strftime('%d/%m/%Y')
                                                 )
-    st.write(
-        """
-        ## 近日開盤價 - {}
-        """.format(product)
-    )
+    if stock_number == 'Aluminum':
+        st.write(
+            """
+            ## 近日開盤價 - USD{}
+            """.format(product)
+        )
+    else:
+        st.write(
+            """
+            ## 近日開盤價 - TWD{}
+            """.format(product)
+        )        
     st.metric(label="Material Price {}".format(price_data.index[-1].strftime('%Y-%m-%d')),value = price_data['Open'][-1], delta=round(price_data['Open'][-2]-price_data['Open'][-1],2))
     st.write(
         """
