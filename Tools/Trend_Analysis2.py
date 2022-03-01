@@ -1116,7 +1116,9 @@ class Data:
 #            model = ARIMA(x_train, order=(best_p, best_d, best_q)) 
 #            fitted = model.fit(disp=-1,transparams=False)
 #         except (ValueError, LinAlgError): 
-#            pass
+#            best_d += 1
+#            model = ARIMA(x_train, order=(best_p, best_d, best_q)) 
+#            fitted = model.fit(disp=-1,transparams=False)
 #         fc, se, conf = fitted.forecast(days, alpha=0.05) # 95% conf
 #         fc_series = pd.Series(fc, index=x_test.index)
 #         lower_series = pd.Series(conf[:, 0], index=x_test.index)
@@ -1333,7 +1335,7 @@ if __name__ == "__main__":
                     stock_number = "USD:TWD"
                     product = "USD:TWD"
                 compare.to_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
-                if compare.iloc[0,0]== 'LightGBM' and score_gbm_acc <= 0.6:
+                if compare.iloc[0,0]== 'LightGBM' and round(score_gbm_acc,1) <= 0.6: #更新GBM規則 20220301
                     print("""最佳預測模型：{}""".format(compare.iloc[1,0]))
                     if compare.iloc[1,0] == 'lstm':     
                         lstm_df = pd.DataFrame(list_lstm,columns = ['FCST'],index = weekdays) 
