@@ -431,7 +431,7 @@ if st.sidebar.button('Confirm'):
                 st.header('**模型表現**')
                 st.write('**為使預測符合真實性與趨勢性，模型比較基準為平均預測震動程度(MAPE)，值越低的預測模型表現越好**')
                 st.write('平均預測震動程度為:{}% (真實與預測值平均變動率差異)'.format(round(compare.loc[compare.model=='LightGBM','score'].values[0],2)))
-                st.write('漲跌預測準確度為:{}'.format(round(score_gbm_acc,2)))
+                st.write('漲跌預測準確度為:{}'.format(round(compare.loc[compare.model=='LightGBM','acc_for_gbm'].values[0],2)))
                 st.write('**預測前1個月股價之概況**')
                 #st.pyplot(gbm_test_plot)
                 gbm_test_plot = load_data('./{}/1 MONTH/{}{}/{}_for_gbm_test_plot.xlsx'.format(stock_number,yyyy,mm,stock_number))
