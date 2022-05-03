@@ -11,8 +11,5 @@ requests==2.25.1
 scikit_learn==1.0.2
 statsmodels==0.12.2
 streamlit==1.3.0
-<<<<<<< HEAD
 XlsxWriter==1.3.8
-=======
 XlsxWriter==1.3.8
->>>>>>> a7e2382a4fbbd7724af115e63ee084fad5f4f0de
