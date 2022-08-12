@@ -138,7 +138,7 @@ if st.sidebar.button('Confirm'):
         stock_number = "USD:TWD" 
     if predicted_interval == 1:
         compare = load_data('./{}/1 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
-        if compare.iloc[0,0]== 'LightGBM' and round(compare.loc[compare.model=='LightGBM','acc_for_gbm'].values[0],2) <= 0.6: #更新GBM規則 20220301
+        if compare.iloc[0,0]== 'LightGBM' and round(compare.loc[compare.model=='LightGBM','acc_for_gbm'].values[0],1) < 0.6: #更新GBM規則 20220301
             st.write('***')
             st.write("""最佳預測模型：{}""".format(compare.iloc[1,0]))
             if compare.iloc[1,0] == 'lstm':    
