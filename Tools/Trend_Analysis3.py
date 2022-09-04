@@ -84,7 +84,7 @@ class Cal_Tool:
             # 平月
             out_data['type'] = 'Flat Month'
             # 平月天数：闰年29天，平年28天
-            year = today().year
+            year = datetime.today().year
             print('>>>>>年份信息是：%s<<<<<' % (year, ))
             if (year % 4 == 0 and year % 100 != 0) or year % 400 == 0:
                 # 闰年
