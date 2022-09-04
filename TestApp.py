@@ -6,7 +6,7 @@
 import streamlit as st
 from PIL import Image
 import sys
-sys.path.append("../Tools")
+sys.path.append("./Tools")
 from Trend_Analysis3 import Data, Cal_Tool
 import pandas as pd
 #import yfinance as yf
