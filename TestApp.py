@@ -7,7 +7,7 @@ import streamlit as st
 from PIL import Image
 import sys
 sys.path.append("/app/fcst-app_test/Tools")
-from Trend_Analysis3 import Data, Cal_Tool
+#from Trend_Analysis3 import Data, Cal_Tool
 import pandas as pd
 #import yfinance as yf
 #import matplotlib.pyplot as plt
