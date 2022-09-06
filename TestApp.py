@@ -735,8 +735,8 @@ if st.sidebar.button('Confirm'):
             st.download_button(label='Download FCST',data=df_xlsx,mime='text/xlsx',file_name= '{}_{}_Prediction.xlsx'.format(calendar.month_name[mm],product)) 
 
     elif predicted_interval == 6:
-        compare = load_data('./{}/6 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
-        st.write('./{}/6 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
+        compare = load_data('FCST-App_Test/{}/6 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
+        st.write('FCST-App_Test/{}/6 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
         st.dataframe(compare)
         st.write('***')
         st.write("""Best Model：{}""".format(compare.iloc[0,0]))
