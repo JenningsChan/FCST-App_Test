@@ -127,7 +127,7 @@ if st.sidebar.button('Confirm'):
         price_data = investpy.get_commodity_historical_data(commodity= 'Aluminum',
                                                             country = "united kingdom", 
                                                             from_date='01/01/2010', 
-                                                            to_date=datetime.datetime(yyyy, mm, calendar.monthrange(yyyy, mm)[1]).strftime('%d/%m/%Y')
+                                                            to_date=datetime(yyyy, mm, calendar.monthrange(yyyy, mm)[1]).strftime('%d/%m/%Y')
                                                             )
         market = 'USD'
     elif stock_number == 'CN Aluminum':
