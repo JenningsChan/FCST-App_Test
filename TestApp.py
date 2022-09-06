@@ -550,8 +550,8 @@ if st.sidebar.button('Confirm'):
                 gbm_change_plot = gbm_change_plot.loc[:,gbm_change_plot.columns.str.contains(price_unit)]
                 #gbm_change_plot = pd.read_excel('/Users/jennings.chan/Desktop/FCST App_Test/{}/1 MONTH/{}_for_gbm_change_plot_{}{}.xlsx'.format(stock_number,product,yyyy,mm),index_col=0)
                 fig2 = px.line(gbm_change_plot,color_discrete_map={
-                                "Predicted Stock Price Changing": "#0000cd",
-                                "Real Stock Price Changing": "#008080"
+                                "{} Predicted Stock Price Changing".format(price_unit): "#0000cd",
+                                "{} Real Stock Price Changing".format(price_unit): "#008080"
                             })
                 st.write(fig2)
                 st.write('**Important Features**')
