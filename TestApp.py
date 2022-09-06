@@ -124,7 +124,6 @@ if st.sidebar.button('Confirm'):
     #stock_engine = Data(stock_number = stock_number,yyyy=yyyy,mm=mm)
     #stock_engine.get_stock_data(if_lstm=False)
     if stock_number == 'UK Aluminum':
-        st.write('{}'.format(calendar.monthrange(yyyy, mm)[1]))
         price_data = investpy.get_commodity_historical_data(commodity= 'Aluminum',
                                                             country = "united kingdom", 
                                                             from_date='01/01/2010', 
