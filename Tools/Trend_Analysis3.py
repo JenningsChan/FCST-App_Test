@@ -84,7 +84,11 @@ class Cal_Tool:
             # 平月
             out_data['type'] = 'Flat Month'
             # 平月天数：闰年29天，平年28天
+<<<<<<< HEAD
             year = today().year
+=======
+            year = datetime.today().year
+>>>>>>> fd8cb2cc7579e596f2f029e39714aca611c646fc
             print('>>>>>年份信息是：%s<<<<<' % (year, ))
             if (year % 4 == 0 and year % 100 != 0) or year % 400 == 0:
                 # 闰年
@@ -2530,4 +2534,8 @@ if __name__ == "__main__":
                 elif compare.iloc[0,0] == 'Prophet': 
                     pred_prophet,prophet_train_plot = stock_engine.transform_df(pred_prophet,prophet_train_plot,stock_number)
                     prophet_train_plot.to_excel('/Users/jennings.chan/Desktop/FCST App_Test 2.0/{}/6 MONTH/{}{}/{}_for_prophet_train_plot.xlsx'.format(stock_number,yyyy,mm,product))
+<<<<<<< HEAD
                     pred_prophet.to_excel('/Users/jennings.chan/Desktop/FCST App_Test 2.0/{}/6 MONTH/{}{}/{}_Best_by_prophet.xlsx'.format(stock_number,yyyy,mm,product))
+=======
+                    pred_prophet.to_excel('/Users/jennings.chan/Desktop/FCST App_Test 2.0/{}/6 MONTH/{}{}/{}_Best_by_prophet.xlsx'.format(stock_number,yyyy,mm,product))
+>>>>>>> fd8cb2cc7579e596f2f029e39714aca611c646fc
