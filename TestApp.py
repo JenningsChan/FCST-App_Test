@@ -736,8 +736,8 @@ if st.sidebar.button('Confirm'):
 
     elif predicted_interval == 6:
         compare = load_data('./{}/6 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
-        st.write('./{}/6 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
-        st.dataframe(compare)
+        #st.write('./{}/6 MONTH/{}{}/comparison.xlsx'.format(stock_number,yyyy,mm))
+        #st.dataframe(compare)
         st.write('***')
         st.write("""Best Model：{}""".format(compare.iloc[0,0]))
         if compare.iloc[0,0] == 'Holt':
